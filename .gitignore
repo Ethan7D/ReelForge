@@ -1,0 +1,31 @@
+# ── Dependencies ──────────────────────────────────────────────
+node_modules/
+
+# ── Environment / secrets ─────────────────────────────────────
+.env
+.env.local
+*.local
+
+# ── Runtime database (SQLite, auto-generated) ────────────────
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+err.log
+
+# ── User uploads (keep the folder, ignore contents) ──────────
+public/uploads/*
+!public/uploads/.gitkeep
+
+# ── WorkBuddy internal / editor / OS ─────────────────────────
+.workbuddy/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

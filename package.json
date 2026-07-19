@@ -1,0 +1,22 @@
+{
+  "name": "reelforge",
+  "version": "1.0.0",
+  "description": "ReelForge — 开源、供应商中立的 AI 视频内容生产基础设施（官网 + 演示后台）",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node --experimental-sqlite server.js",
+    "dev": "node --experimental-sqlite server.js"
+  },
+  "keywords": [
+    "ai",
+    "video",
+    "infrastructure",
+    "open-source"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.2.0"
+  }
+}
