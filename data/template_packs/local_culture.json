@@ -1,0 +1,57 @@
+{
+  "id": "local_culture",
+  "name": "地方文旅模板包",
+  "description": "面向地方美食、美景和城市记忆的 30 秒短视频模板。",
+  "characters": [
+    {
+      "id": "c_host",
+      "name": "文旅推荐官",
+      "role": "出镜主持",
+      "assetSpec": "正面半身照，人物清晰，背景干净"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s_food",
+      "name": "美食场景",
+      "assetSpec": "地方美食特写，暖色调，有烟火气"
+    },
+    {
+      "id": "s_view",
+      "name": "美景场景",
+      "assetSpec": "地标、街巷或自然风光横图，画面开阔"
+    }
+  ],
+  "scriptTemplates": [
+    {
+      "id": "t_taste",
+      "title": "寻味地方",
+      "slots": [
+        {
+          "slot": "opening_visual",
+          "bind": "scene:s_view",
+          "needMaterial": "美景 地标 街巷 自然风光",
+          "hint": "开场用城市或风景建立地方感"
+        },
+        {
+          "slot": "food_closeup",
+          "bind": "scene:s_food",
+          "needMaterial": "美食 特写 非遗 老街",
+          "hint": "中段展示最有记忆点的地方美食"
+        },
+        {
+          "slot": "host",
+          "bind": "character:c_host",
+          "needMaterial": "人物 主持 推荐官 半身照",
+          "hint": "如果素材库没有人物照，建议补拍"
+        },
+        {
+          "slot": "voiceover",
+          "type": "text",
+          "needMaterial": "文案 介绍 口播",
+          "hint": "从素材文案生成一句 15 秒以内口播"
+        }
+      ]
+    }
+  ]
+}

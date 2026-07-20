@@ -1,0 +1,27 @@
+{
+  "id": "demo_library",
+  "name": "示例地方文旅素材库",
+  "items": [
+    {
+      "id": "m_food_001",
+      "type": "美食",
+      "text": "老街非遗糕团，三代手艺，热气腾腾。",
+      "image_path": "/uploads/demo-food.jpg",
+      "tags": ["美食", "非遗", "老街", "特写"]
+    },
+    {
+      "id": "m_view_001",
+      "type": "美景",
+      "text": "城北湿地公园黄昏，水面倒影和远处城市天际线。",
+      "image_path": "/uploads/demo-view.jpg",
+      "tags": ["美景", "自然风光", "黄昏", "地标"]
+    },
+    {
+      "id": "m_copy_001",
+      "type": "文案",
+      "text": "一口老街糕团，一段城市记忆。跟着 ReelForge，重新认识这座城。",
+      "image_path": null,
+      "tags": ["文案", "口播", "地方文旅"]
+    }
+  ]
+}
