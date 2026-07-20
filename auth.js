@@ -31,14 +31,29 @@ function sessionExpiry() {
 
 // ---------------------------------------------------------------------------
 // API Key encryption (AES-256-GCM)
-// Master key from env REELFORGE_MASTER_KEY, fallback to a dev key (demo only).
+// Master key MUST come from env REELFORGE_MASTER_KEY.
+//  - 生产环境(NODE_ENV=production)未设置则拒绝启动（避免 API Key 被公开兜底密钥加密）
+//  - 开发/演示环境未设置则使用本次进程内随机密钥（仅本地可用，重启后已存 Key 不可解密）
 // ---------------------------------------------------------------------------
-const MASTER_KEY = Buffer.from(
-  (process.env.REELFORGE_MASTER_KEY || 'reelforge-dev-master-key-change-me!!')
-    .slice(0, 32)
-    .padEnd(32, '0'),
-  'utf8'
-);
+function resolveMasterKey() {
+  const fromEnv = process.env.REELFORGE_MASTER_KEY;
+  if (fromEnv && fromEnv.trim()) {
+    return Buffer.from(fromEnv.slice(0, 32).padEnd(32, '0'), 'utf8');
+  }
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      '[ReelForge] 安全启动被拒绝：生产环境必须设置 REELFORGE_MASTER_KEY 用于加密存储的 API Key。' +
+      '请复制 .env.example 为 .env 并填入强随机密钥（如 `openssl rand -hex 32`）。'
+    );
+  }
+  const devKey = crypto.randomBytes(32);
+  console.warn(
+    '[ReelForge] 警告：未设置 REELFORGE_MASTER_KEY，已使用进程内随机密钥加密 API Key。' +
+    '该密钥仅本次运行有效，重启后已存 Key 将无法解密；请勿在生产环境使用此模式。'
+  );
+  return devKey;
+}
+const MASTER_KEY = resolveMasterKey();
 
 function encrypt(text) {
   if (text == null || text === '') return '';

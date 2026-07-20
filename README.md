@@ -22,10 +22,28 @@ npm start            # 等价于 node --experimental-sqlite server.js
 > `node:sqlite` 为 Node 22 实验特性，需 `--experimental-sqlite` 启动参数（已写入 `npm start`）。
 > 如需自定义端口：`PORT=8080 npm start`。
 
-### 演示账号
+### 安全配置（发布 / 生产必看）
 
-- 管理员：`admin@reelforge.dev` / `reelforge-admin`
+本项目对敏感数据做了「排除 + 加固」处理：
+
+- **运行时数据不入库**：用户、API Key、会话等仅存于本地 `data/*.db`（已被 `.gitignore` 忽略），仓库内无任何真实数据。
+- **API Key 加密主密钥**：`REELFORGE_MASTER_KEY` 用于加密「API 接入」页存储的模型 Key（AES-256-GCM）。
+  - 生产环境（`NODE_ENV=production`）**必须**设置，否则服务拒绝启动；建议值：`openssl rand -hex 32`。
+  - 开发 / 演示环境未设置时，使用本次进程内随机密钥（仅本地可用，重启后已存 Key 不可解密，并在启动日志告警）。
+- **演示管理员**：默认**不创建**（避免公开仓库泄露已知凭证）。需要演示账号时，设置 `REELFORGE_SEED_ADMIN=1`（并建议同时设强随机 `REELFORGE_ADMIN_PASSWORD`）。
+
+```bash
+# .env 关键安全项
+REELFORGE_MASTER_KEY=$(openssl rand -hex 32)   # 生产必填
+REELFORGE_SEED_ADMIN=1                           # 可选：启用演示管理员
+REELFORGE_ADMIN_PASSWORD=改成你自己的强密码       # 可选：覆盖演示管理员密码
+```
+
+### 演示账号（仅当启用播种时存在）
+
+- 设置 `REELFORGE_SEED_ADMIN=1` 后：管理员 `admin@reelforge.dev` / `REELFORGE_ADMIN_PASSWORD` 的值（默认 `reelforge-admin`，请务必修改）
 - 或在 `/auth.html` 自行注册新账号
+- **默认（未设置 `REELFORGE_SEED_ADMIN`）不创建任何管理员账号**
 
 ## 配置真实视频生成（可选）
 

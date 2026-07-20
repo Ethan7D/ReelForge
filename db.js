@@ -208,13 +208,7 @@ curl -X POST http://localhost:8080/api/v1/render \\
   ];
   tx(() => docs.forEach(d => insertDoc.run(...d)));
 
-  // 默认管理员（密码: reelforge-admin），便于演示后台
-  const existingAdmin = db.prepare("SELECT id FROM users WHERE email = ?").get('admin@reelforge.dev');
-  if (!existingAdmin) {
-    const h = hashPassword('reelforge-admin');
-    db.prepare("INSERT INTO users (email, name, password_hash, role, plan, membership_status, membership_started_at, membership_expires_at) VALUES (?, ?, ?, 'admin', 'enterprise', 'active', datetime('now'), ?)")
-      .run('admin@reelforge.dev', 'ReelForge 管理员', h, sessionExpiry());
-  }
+  // 演示管理员见下方 ensureDemoAdmin()（每次启动按环境变量决定是否保种，独立于内容播种）
 }
 
 // ---------------------------------------------------------------------------
@@ -267,4 +261,23 @@ function ensureSchemaExtensions() {
 
 ensureSchemaExtensions();
 
-module.exports = { db, seedIfEmpty };
+// ---------------------------------------------------------------------------
+// 演示管理员（独立于内容播种，每次启动按环境变量决定是否保种）
+// 默认不创建（避免公开仓库泄露已知凭证）；设置 REELFORGE_SEED_ADMIN=1 时确保存在。
+// ---------------------------------------------------------------------------
+function ensureDemoAdmin() {
+  if (process.env.REELFORGE_SEED_ADMIN !== '1' && process.env.REELFORGE_SEED_ADMIN !== 'true') {
+    return; // 未启用：不创建、不打印，避免每次启动刷屏
+  }
+  const adminEmail = (process.env.REELFORGE_ADMIN_EMAIL || 'admin@reelforge.dev').trim();
+  const adminPassword = (process.env.REELFORGE_ADMIN_PASSWORD || 'reelforge-admin').trim();
+  const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
+  if (existingAdmin) return;
+  const h = hashPassword(adminPassword);
+  db.prepare("INSERT INTO users (email, name, password_hash, role, plan, membership_status, membership_started_at, membership_expires_at) VALUES (?, ?, ?, 'admin', 'enterprise', 'active', datetime('now'), ?)")
+    .run(adminEmail, 'ReelForge 管理员', h, sessionExpiry());
+  console.log(`[ReelForge] 已创建演示管理员账号 ${adminEmail}，请尽快修改密码。`);
+}
+ensureDemoAdmin();
+
+module.exports = { db, seedIfEmpty, ensureDemoAdmin };
