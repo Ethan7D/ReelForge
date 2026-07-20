@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>登录 / 注册 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="auth">
+  <header class="site-header"></header>
+
+  <section class="block" style="padding-top:48px">
+    <div class="container">
+      <div class="form-card">
+        <div class="form-tabs">
+          <button id="tabLogin" class="active" type="button">登录</button>
+          <button id="tabReg" type="button">注册</button>
+        </div>
+        <p class="muted" id="formTitle" style="text-align:center;margin-bottom:18px">登录以进入演示控制台</p>
+
+        <form id="authForm">
+          <div class="field" id="nameField" style="display:none">
+            <label>姓名 / 团队名</label>
+            <input type="text" id="name" placeholder="如：方浩宇" />
+          </div>
+          <div class="field">
+            <label>邮箱</label>
+            <input type="email" id="email" required placeholder="you@company.com" />
+          </div>
+          <div class="field">
+            <label>密码（至少 6 位）</label>
+            <input type="password" id="password" required placeholder="••••••" />
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" id="submitBtn" type="submit">登录</button>
+          <p class="form-error" id="err"></p>
+          <p class="form-ok" id="ok"></p>
+        </form>
+
+        <p class="muted" style="font-size:13px;text-align:center;margin-top:14px">
+          演示管理员需设置 <code>REELFORGE_SEED_ADMIN=1</code> 后可用（默认不创建，详见 README 安全配置）
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script>
+    (function () {
+      const RF = window.ReelForge;
+      let mode = location.hash === '#register' ? 'register' : 'login';
+      const tabLogin = document.getElementById('tabLogin');
+      const tabReg = document.getElementById('tabReg');
+      const nameField = document.getElementById('nameField');
+      const submitBtn = document.getElementById('submitBtn');
+      const formTitle = document.getElementById('formTitle');
+
+      function setMode(m) {
+        mode = m;
+        const reg = m === 'register';
+        tabLogin.classList.toggle('active', !reg);
+        tabReg.classList.toggle('active', reg);
+        nameField.style.display = reg ? '' : 'none';
+        submitBtn.textContent = reg ? '创建账号' : '登录';
+        formTitle.textContent = reg ? '注册以开始使用 ReelForge' : '登录以进入演示控制台';
+        document.getElementById('err').textContent = '';
+      }
+      tabLogin.addEventListener('click', () => setMode('login'));
+      tabReg.addEventListener('click', () => setMode('register'));
+      setMode(mode);
+
+      document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const err = document.getElementById('err');
+        err.textContent = '';
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const payload = { email, password };
+        if (mode === 'register') payload.name = document.getElementById('name').value;
+        const path = mode === 'register' ? '/auth/register' : '/auth/login';
+        const { ok, data } = await RF.api('POST', path, { body: payload, auth: false });
+        if (ok) {
+          RF.toast('成功，正在进入控制台…', 'ok');
+          setTimeout(() => (location.href = '/dashboard.html'), 600);
+        } else {
+          err.textContent = data.error || '操作失败';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

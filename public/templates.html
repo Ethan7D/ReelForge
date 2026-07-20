@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>选择模板 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="templates">
+  <header class="site-header"></header>
+
+  <div class="app-shell">
+    <aside class="sidebar"></aside>
+
+    <main class="app-main">
+      <div class="app-head">
+        <div>
+          <div class="crumbs">ReelForge 控制台 / 模板库</div>
+          <div class="page-title">选择模板，快速生成视频</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">选择一个行业模板，只需上传自己的素材即可一键出片</div>
+        </div>
+        <a class="btn btn-ghost" href="dashboard.html?tab=templates">← 返回项目</a>
+      </div>
+
+      <!-- 行业分类标签 -->
+      <div class="tmpl-cat-tabs" id="tmplCatTabs">
+        <button type="button" class="tmpl-cat-tab active" data-cat="all">全部模板</button>
+        <button type="button" class="tmpl-cat-tab" data-cat="tourism">短剧文旅</button>
+        <button type="button" class="tmpl-cat-tab" data-cat="ecommerce">电商带货</button>
+        <button type="button" class="tmpl-cat-tab" data-cat="brand">企业品牌</button>
+      </div>
+
+      <!-- 模板网格 -->
+      <div class="tmpl-grid" id="tmplGrid"></div>
+
+      <!-- 空态 -->
+      <div class="tmpl-empty" id="tmplEmpty" style="display:none">
+        <p class="muted">该分类暂无模板，请选择其他分类。</p>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/templates-page.js"></script>
+</body>
+</html>

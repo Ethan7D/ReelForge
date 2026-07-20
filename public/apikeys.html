@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API 接入 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="apikeys">
+  <header class="site-header"></header>
+
+  <div class="app-shell">
+    <aside class="sidebar"></aside>
+
+    <main class="app-main">
+      <div class="app-head">
+        <div>
+          <div class="crumbs">ReelForge 控制台</div>
+          <div class="page-title">接入我的大模型 API</div>
+        </div>
+        <button class="btn btn-primary" id="newBtn">+ 接入新 API</button>
+      </div>
+
+      <div id="memberBar" class="card" style="margin-bottom:20px;padding:14px 18px;display:flex;align-items:center;gap:12px;justify-content:space-between">
+        <span id="memberText" class="muted">加载中…</span>
+        <a class="btn btn-ghost" href="pricing.html">去开通会员</a>
+      </div>
+
+      <div class="project-grid" id="keyGrid"></div>
+    </main>
+  </div>
+
+  <!-- API Key Modal — 两步骤：先选供应商 → 再填配置 -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal modal-apikey">
+      <div class="apikey-step" id="apikeyStepList">
+        <div class="modal-topbar">
+          <h3 id="modalTitle">接入大模型 API</h3>
+          <button type="button" class="modal-close-btn" id="cancelBtn">&times;</button>
+        </div>
+        <p class="muted" style="margin:0 0 16px;font-size:13px">选择一个模型供应商，填入你的 API Key 即可接入 ReelForge 使用。</p>
+        <!-- 已接入分组 -->
+        <div class="prov-group" id="provGroupConnected" style="display:none">
+          <div class="prov-group-head">
+            <span class="prov-group-label">✅ 已接入</span>
+            <span class="prov-group-count" id="provCountConnected">0</span>
+          </div>
+          <div class="prov-list" id="provListConnected"></div>
+        </div>
+        <!-- 未接入分组 -->
+        <div class="prov-group" id="provGroupUnconnected">
+          <div class="prov-group-head">
+            <span class="prov-group-label">⏳ 未接入</span>
+            <span class="prov-group-count" id="provCountUnconnected">0</span>
+          </div>
+          <div class="prov-list" id="provListUnconnected"></div>
+        </div>
+      </div>
+
+      <!-- Step 2: 填写表单 -->
+      <div class="apikey-step" id="apikeyStepForm" style="display:none">
+        <div class="modal-topbar">
+          <button type="button" class="btn btn-ghost btn-sm" id="backToListBtn">← 返回列表</button>
+          <h3 id="formTitle">填写接入信息</h3>
+          <div style="width:auto"></div><!-- spacer -->
+        </div>
+        <form id="keyForm">
+          <input type="hidden" id="keyId" />
+          <div class="prov-selected-card" id="provSelectedCard">
+            <span class="psc-icon" id="pscIcon"></span>
+            <div>
+              <div class="psc-name" id="pscName"></div>
+              <div class="psc-models" id="pscModels"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>名称 / 备注</label>
+            <input type="text" id="kName" placeholder="如：我的主力账号" />
+          </div>
+          <div class="field">
+            <label>API Key *</label>
+            <div class="input-with-action">
+              <input type="password" id="kKey" placeholder="sk-..." />
+              <button type="button" class="link-btn" id="kToggle">显示</button>
+            </div>
+            <p class="muted" style="font-size:11px;margin:4px 0 0">密钥加密存储，仅你可见；编辑时留空表示不修改。</p>
+          </div>
+          <div class="field">
+            <label>API 地址</label>
+            <input type="text" id="kBase" placeholder="https://..." />
+            <p class="muted" style="font-size:11px;margin:4px 0 0">留空使用供应商默认地址</p>
+          </div>
+          <div class="field">
+            <label>默认模型</label>
+            <input type="text" id="kModel" placeholder="如：gpt-4o" />
+          </div>
+          <label class="chk-row-label">
+            <input type="checkbox" id="kDefault" /> 设为默认供应商
+          </label>
+          <p class="form-error" id="kErr"></p>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script src="js/providers.js"></script>
+  <script src="js/apikeys.js"></script>
+</body>
+</html>

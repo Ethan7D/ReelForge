@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReelForge · 整体配色方案预览</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: #05060c;
+    color: #e7e9f3;
+    padding: 40px 28px 80px;
+    line-height: 1.5;
+  }
+  h1 { font-size: 26px; font-weight: 800; letter-spacing: .5px; }
+  .lead { color: #8b90a8; font-size: 14px; margin-top: 8px; max-width: 760px; }
+  .legend { display:flex; gap:18px; flex-wrap:wrap; margin:22px 0 34px; font-size:12.5px; color:#9aa0b8; }
+  .legend span b { color:#cfd3e6; font-weight:600; }
+
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 26px; }
+
+  /* ===== 方案卡片 ===== */
+  .scheme {
+    border-radius: 20px;
+    padding: 22px;
+    border: 1px solid rgba(255,255,255,.07);
+    position: relative;
+    overflow: hidden;
+  }
+  .scheme-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 16px; }
+  .scheme-title { font-size: 17px; font-weight: 800; }
+  .scheme-sub { font-size: 12px; opacity:.7; margin-top:2px; }
+  .swatch-row { display:flex; gap:6px; margin-top:8px; }
+  .swatch { width: 26px; height: 26px; border-radius:7px; border:1px solid rgba(255,255,255,.15); }
+
+  /* 复用的组件样式（基于变量） */
+  .nav { display:flex; align-items:center; gap:14px; padding:10px 14px; border-radius:12px; background: var(--surface); border:1px solid var(--border); margin-bottom: 14px; }
+  .logo { width:30px; height:30px; border-radius:8px; background: var(--brand-grad); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:#fff; }
+  .nav a { font-size:13px; color: var(--text-dim); text-decoration:none; }
+  .nav a.on { color: var(--text); font-weight:600; }
+  .nav .grow { flex:1; }
+  .pill-btn { font-size:12px; padding:7px 14px; border-radius:20px; background: var(--brand-grad); color:#fff; border:none; font-weight:600; box-shadow: var(--glow); }
+
+  .hero { border-radius:14px; padding:22px; background: var(--surface); border:1px solid var(--border); margin-bottom:14px; position:relative; }
+  .hero::before { content:""; position:absolute; inset:0; border-radius:14px; background: var(--ambient); opacity:.5; pointer-events:none; }
+  .hero h3 { font-size:18px; font-weight:800; position:relative; }
+  .hero p { font-size:12.5px; color:var(--text-dim); margin-top:6px; position:relative; }
+  .hero .cta { margin-top:14px; display:inline-block; position:relative; font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; background: var(--brand-grad); color:#fff; box-shadow: var(--glow); }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .pcard { background: var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; }
+  .pcard .t { font-size:13px; font-weight:700; }
+  .pcard .m { font-size:11.5px; color:var(--text-dim); margin-top:4px; }
+  .tag { display:inline-block; font-size:10.5px; padding:3px 8px; border-radius:6px; background: var(--chip); color: var(--brand-2); margin-top:8px; font-weight:600; }
+
+  .stats { display:flex; gap:10px; margin-bottom:14px; }
+  .stat { flex:1; background: var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center; }
+  .stat .v { font-size:20px; font-weight:800; background: var(--brand-grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .stat .l { font-size:11px; color:var(--text-dim); margin-top:2px; }
+
+  .steps { display:flex; gap:8px; }
+  .step { flex:1; text-align:center; font-size:11.5px; padding:9px 4px; border-radius:9px; border:1px solid var(--border); color:var(--text-dim); background: var(--surface); }
+  .step.on { color:#fff; border-color:transparent; background: var(--brand-grad); box-shadow: var(--glow); font-weight:700; }
+
+  /* ============ 方案 1 · 极光午夜 ============ */
+  .s1 { --bg:#0a0e1a; background:#0a0e1a;
+        --surface: rgba(255,255,255,.045); --border: rgba(120,160,255,.16);
+        --text:#eaf0ff; --text-dim:#8a93b5;
+        --brand:#5b8cff; --brand-2:#22d3ee; --brand-grad: linear-gradient(135deg,#5b8cff,#22d3ee);
+        --chip: rgba(34,211,238,.14); --glow: 0 6px 22px rgba(43,108,255,.35);
+        --ambient: radial-gradient(120% 90% at 85% 0%, rgba(91,140,255,.22), transparent 55%), radial-gradient(120% 90% at 5% 100%, rgba(34,211,238,.18), transparent 55%); }
+
+  /* ============ 方案 2 · 碳纤霓虹 ============ */
+  .s2 { --bg:#0c0d10; background:#0c0d10;
+        --surface: rgba(255,255,255,.04); --border: rgba(255,255,255,.10);
+        --text:#eef1f0; --text-dim:#8b918f;
+        --brand:#a3e635; --brand-2:#22d3ee; --brand-grad: linear-gradient(135deg,#a3e635,#22d3ee);
+        --chip: rgba(163,230,53,.13); --glow: 0 0 18px rgba(163,230,53,.30);
+        --ambient: radial-gradient(120% 90% at 90% 10%, rgba(163,230,53,.14), transparent 55%), radial-gradient(120% 90% at 0% 100%, rgba(34,211,238,.12), transparent 55%); }
+
+  /* ============ 方案 3 · 桑葚暖夜 ============ */
+  .s3 { --bg:#140a18; background:#140a18;
+        --surface: rgba(255,255,255,.045); --border: rgba(217,70,160,.18);
+        --text:#fdeafb; --text-dim:#b389ad;
+        --brand:#c026d3; --brand-2:#fb7185; --brand-grad: linear-gradient(135deg,#c026d3,#fb7185);
+        --chip: rgba(251,113,133,.15); --glow: 0 6px 22px rgba(192,38,211,.38);
+        --ambient: radial-gradient(120% 90% at 85% 0%, rgba(192,38,211,.24), transparent 55%), radial-gradient(120% 90% at 5% 100%, rgba(251,113,133,.18), transparent 55%); }
+
+  /* ============ 方案 4 · 墨白极简（浅色） ============ */
+  .s4 { --bg:#f6f7fb; background:#f6f7fb;
+        --surface:#ffffff; --border: rgba(15,23,42,.10);
+        --text:#0f172a; --text-dim:#64748b;
+        --brand:#4f46e5; --brand-2:#6366f1; --brand-grad: linear-gradient(135deg,#4f46e5,#6366f1);
+        --chip: rgba(79,70,229,.10); --glow: 0 4px 14px rgba(79,70,229,.18);
+        --ambient: radial-gradient(120% 90% at 90% 0%, rgba(99,102,241,.08), transparent 60%); }
+  .s4 .scheme-title, .s4 .lead, .s4 .scheme-sub { color:#0f172a; }
+  .s4 .scheme-sub { opacity:.6; }
+
+  /* ============ 方案 5 · 琥珀工作室 ============ */
+  .s5 { --bg:#16110c; background:#16110c;
+        --surface: rgba(255,255,255,.04); --border: rgba(245,158,11,.16);
+        --text:#fdf3e7; --text-dim:#b59a7e;
+        --brand:#f59e0b; --brand-2:#f43f5e; --brand-grad: linear-gradient(135deg,#f59e0b,#f43f5e);
+        --chip: rgba(245,158,11,.14); --glow: 0 6px 22px rgba(245,158,11,.32);
+        --ambient: radial-gradient(120% 90% at 85% 0%, rgba(245,158,11,.20), transparent 55%), radial-gradient(120% 90% at 5% 100%, rgba(244,63,94,.16), transparent 55%); }
+
+  .scheme { background: var(--bg); }
+  .note { font-size:11.5px; color: var(--text-dim); margin-top:12px; }
+</style>
+</head>
+<body>
+  <h1>ReelForge · 整体配色方案预览</h1>
+  <p class="lead">以下 5 套方案从「背景色温 / 品牌色相 / 按钮质感 / 氛围光」四个维度整体重想，不是当前暗色主题的简单变体。每套都渲染了导航、Hero、项目卡、数据、步骤条五个真实组件，可直接对比手感。点击后我可把对应令牌套入站点 CSS 变量。</p>
+
+  <div class="legend">
+    <span><b>当前已实施</b>：霓虹紫粉（B 方案）</span>
+    <span><b>S1 极光午夜</b>：冷静科技蓝青</span>
+    <span><b>S2 碳纤霓虹</b>：近黑 + 酸柠青</span>
+    <span><b>S3 桑葚暖夜</b>：紫红暖娱乐</span>
+    <span><b>S4 墨白极简</b>：浅色单色靛</span>
+    <span><b>S5 琥珀工作室</b>：暖棕琥珀</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- S1 -->
+    <div class="scheme s1">
+      <div class="scheme-head">
+        <div>
+          <div class="scheme-title">S1 · 极光午夜</div>
+          <div class="scheme-sub">深海军蓝底 · 蓝→青渐变 · 柔光 · 冷静专业 AI 感</div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#0a0e1a"></div>
+          <div class="swatch" style="background:#5b8cff"></div>
+          <div class="swatch" style="background:#22d3ee"></div>
+        </div>
+      </div>
+      <div class="nav"><div class="logo">R</div><a class="on">工作台</a><a>项目</a><a>资产</a><div class="grow"></div><button class="pill-btn">新建</button></div>
+      <div class="hero"><h3>一句话，出一支短片</h3><p>AI 全流程自动生产 · 角色先建 · 三级质量管控</p><span class="cta">立即体验 →</span></div>
+      <div class="cards">
+        <div class="pcard"><div class="t">品牌宣传片</div><div class="m">已完成 · 1 分 30 秒</div><span class="tag">已完成</span></div>
+        <div class="pcard"><div class="t">产品种草短视频</div><div class="m">渲染中 · 第 3 镜</div><span class="tag">渲染中</span></div>
+      </div>
+      <div class="stats"><div class="stat"><div class="v">12</div><div class="l">项目</div></div><div class="stat"><div class="v">3</div><div class="l">渲染中</div></div><div class="stat"><div class="v">7</div><div class="l">已完成</div></div></div>
+      <div class="steps"><div class="step on">需求</div><div class="step">脚本</div><div class="step">人物</div><div class="step">分镜</div><div class="step">成片</div></div>
+      <div class="note">适合：强调「可靠、专业、AI 生产基建」的调性。</div>
+    </div>
+
+    <!-- S2 -->
+    <div class="scheme s2">
+      <div class="scheme-head">
+        <div>
+          <div class="scheme-title">S2 · 碳纤霓虹</div>
+          <div class="scheme-sub">近黑碳灰 · 酸柠→青 · 锐利霓虹 · 专业工具感</div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#0c0d10"></div>
+          <div class="swatch" style="background:#a3e635"></div>
+          <div class="swatch" style="background:#22d3ee"></div>
+        </div>
+      </div>
+      <div class="nav"><div class="logo">R</div><a class="on">工作台</a><a>项目</a><a>资产</a><div class="grow"></div><button class="pill-btn">新建</button></div>
+      <div class="hero"><h3>一句话，出一支短片</h3><p>AI 全流程自动生产 · 角色先建 · 三级质量管控</p><span class="cta">立即体验 →</span></div>
+      <div class="cards">
+        <div class="pcard"><div class="t">品牌宣传片</div><div class="m">已完成 · 1 分 30 秒</div><span class="tag">已完成</span></div>
+        <div class="pcard"><div class="t">产品种草短视频</div><div class="m">渲染中 · 第 3 镜</div><span class="tag">渲染中</span></div>
+      </div>
+      <div class="stats"><div class="stat"><div class="v">12</div><div class="l">项目</div></div><div class="stat"><div class="v">3</div><div class="l">渲染中</div></div><div class="stat"><div class="v">7</div><div class="l">已完成</div></div></div>
+      <div class="steps"><div class="step on">需求</div><div class="step">脚本</div><div class="step">人物</div><div class="step">分镜</div><div class="step">成片</div></div>
+      <div class="note">适合：像 Blender / DaVinci 一样的硬核创作工具气质。</div>
+    </div>
+
+    <!-- S3 -->
+    <div class="scheme s3">
+      <div class="scheme-head">
+        <div>
+          <div class="scheme-title">S3 · 桑葚暖夜</div>
+          <div class="scheme-sub">深紫红底 · 品红→玫瑰 · 暖光 · 短剧娱乐感</div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#140a18"></div>
+          <div class="swatch" style="background:#c026d3"></div>
+          <div class="swatch" style="background:#fb7185"></div>
+        </div>
+      </div>
+      <div class="nav"><div class="logo">R</div><a class="on">工作台</a><a>项目</a><a>资产</a><div class="grow"></div><button class="pill-btn">新建</button></div>
+      <div class="hero"><h3>一句话，出一支短片</h3><p>AI 全流程自动生产 · 角色先建 · 三级质量管控</p><span class="cta">立即体验 →</span></div>
+      <div class="cards">
+        <div class="pcard"><div class="t">品牌宣传片</div><div class="m">已完成 · 1 分 30 秒</div><span class="tag">已完成</span></div>
+        <div class="pcard"><div class="t">产品种草短视频</div><div class="m">渲染中 · 第 3 镜</div><span class="tag">渲染中</span></div>
+      </div>
+      <div class="stats"><div class="stat"><div class="v">12</div><div class="l">项目</div></div><div class="stat"><div class="v">3</div><div class="l">渲染中</div></div><div class="stat"><div class="v">7</div><div class="l">已完成</div></div></div>
+      <div class="steps"><div class="step on">需求</div><div class="step">脚本</div><div class="step">人物</div><div class="step">分镜</div><div class="step">成片</div></div>
+      <div class="note">适合：短剧 / 情感内容，热情有温度。与现有紫粉最接近但更暖更红。</div>
+    </div>
+
+    <!-- S4 -->
+    <div class="scheme s4">
+      <div class="scheme-head">
+        <div>
+          <div class="scheme-title">S4 · 墨白极简</div>
+          <div class="scheme-sub">浅色底 · 单色靛蓝 · 发丝描边 · 高端克制</div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#f6f7fb"></div>
+          <div class="swatch" style="background:#4f46e5"></div>
+          <div class="swatch" style="background:#6366f1"></div>
+        </div>
+      </div>
+      <div class="nav"><div class="logo">R</div><a class="on">工作台</a><a>项目</a><a>资产</a><div class="grow"></div><button class="pill-btn">新建</button></div>
+      <div class="hero"><h3>一句话，出一支短片</h3><p>AI 全流程自动生产 · 角色先建 · 三级质量管控</p><span class="cta">立即体验 →</span></div>
+      <div class="cards">
+        <div class="pcard"><div class="t">品牌宣传片</div><div class="m">已完成 · 1 分 30 秒</div><span class="tag">已完成</span></div>
+        <div class="pcard"><div class="t">产品种草短视频</div><div class="m">渲染中 · 第 3 镜</div><span class="tag">渲染中</span></div>
+      </div>
+      <div class="stats"><div class="stat"><div class="v">12</div><div class="l">项目</div></div><div class="stat"><div class="v">3</div><div class="l">渲染中</div></div><div class="stat"><div class="v">7</div><div class="l">已完成</div></div></div>
+      <div class="steps"><div class="step on">需求</div><div class="step">脚本</div><div class="step">人物</div><div class="step">分镜</div><div class="step">成片</div></div>
+      <div class="note">适合：最可信、最「专业服务」气质，但与现有炫彩品牌反差最大（浅色）。</div>
+    </div>
+
+    <!-- S5 -->
+    <div class="scheme s5">
+      <div class="scheme-head">
+        <div>
+          <div class="scheme-title">S5 · 琥珀工作室</div>
+          <div class="scheme-sub">暖棕底 · 琥珀→玫瑰 · 暖光 · 创作者工作室</div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#16110c"></div>
+          <div class="swatch" style="background:#f59e0b"></div>
+          <div class="swatch" style="background:#f43f5e"></div>
+        </div>
+      </div>
+      <div class="nav"><div class="logo">R</div><a class="on">工作台</a><a>项目</a><a>资产</a><div class="grow"></div><button class="pill-btn">新建</button></div>
+      <div class="hero"><h3>一句话，出一支短片</h3><p>AI 全流程自动生产 · 角色先建 · 三级质量管控</p><span class="cta">立即体验 →</span></div>
+      <div class="cards">
+        <div class="pcard"><div class="t">品牌宣传片</div><div class="m">已完成 · 1 分 30 秒</div><span class="tag">已完成</span></div>
+        <div class="pcard"><div class="t">产品种草短视频</div><div class="m">渲染中 · 第 3 镜</div><span class="tag">渲染中</span></div>
+      </div>
+      <div class="stats"><div class="stat"><div class="v">12</div><div class="l">项目</div></div><div class="stat"><div class="v">3</div><div class="l">渲染中</div></div><div class="stat"><div class="v">7</div><div class="l">已完成</div></div></div>
+      <div class="steps"><div class="step on">需求</div><div class="step">脚本</div><div class="step">人物</div><div class="step">分镜</div><div class="step">成片</div></div>
+      <div class="note">适合：温暖、有人情味的创作者社区调性。</div>
+    </div>
+
+  </div>
+</body>
+</html>

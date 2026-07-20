@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联系我们 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="contact">
+  <header class="site-header"></header>
+
+  <section class="block" style="padding-top:54px">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">联系我们</span>
+        <h2>聊聊你的视频生产需求</h2>
+        <p>无论是技术咨询、商务合作还是开源贡献，留言后我们会尽快回复。</p>
+      </div>
+
+      <div class="grid grid-2" style="align-items:start">
+        <div class="form-card">
+          <form id="contactForm">
+            <div class="field">
+              <label>称呼 *</label>
+              <input type="text" id="name" required placeholder="如：王经理" />
+            </div>
+            <div class="field">
+              <label>邮箱 *</label>
+              <input type="email" id="email" required placeholder="you@company.com" />
+            </div>
+            <div class="field">
+              <label>公司 / 团队</label>
+              <input type="text" id="company" placeholder="选填" />
+            </div>
+            <div class="field">
+              <label>留言 *</label>
+              <textarea id="message" required placeholder="想了解的内容、规模、时间线…"></textarea>
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" type="submit">提交留言</button>
+            <p class="form-error" id="err"></p>
+          </form>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:18px">
+            <h3>商务合作</h3>
+            <p class="muted">企业版、私有化部署与专属模型接入，欢迎直接联系。</p>
+          </div>
+          <div class="card" style="margin-bottom:18px">
+            <h3>开源社区</h3>
+            <p class="muted">在 GitHub 上提 Issue 与 PR，参与路线图讨论，一起把 ReelForge 做得更好。</p>
+          </div>
+          <div class="card">
+            <h3>免费试用</h3>
+            <p class="muted">注册账号即可进入演示控制台，亲手创建一个由 Agent 驱动的生产项目。</p>
+            <a class="btn btn-ghost" href="auth.html#register">免费开始</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script>
+    (function () {
+      const RF = window.ReelForge;
+      document.getElementById('contactForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const err = document.getElementById('err');
+        err.textContent = '';
+        const body = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          company: document.getElementById('company').value,
+          message: document.getElementById('message').value,
+        };
+        const { ok, data } = await RF.api('POST', '/contact', { body, auth: false });
+        if (ok) { RF.toast(data.message || '已提交', 'ok'); e.target.reset(); }
+        else err.textContent = data.error || '提交失败，请稍后重试';
+      });
+    })();
+  </script>
+</body>
+</html>

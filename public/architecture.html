@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent 工作流 · ReelForge</title>
+  <meta name="description" content="ReelForge 的 Agent 工作流：需求解析 → 角色资产 → 剧本 → 场景 → 分镜 → 视频 → 一致性校验 → 配音 → 剪辑 → 交付，以及三级质量管控体系。" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="architecture">
+  <header class="site-header"></header>
+
+  <!-- Agent 工作流 -->
+  <section class="block" style="padding-top:54px">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Agent 工作流</span>
+        <h2>从一句话到成片，Agent 自己跑完</h2>
+        <p>需求方只在「剧本确认」环节参与一次，其余 10 个环节全部由 Agent 自动编排执行。</p>
+      </div>
+
+      <div class="pipeline">
+        <div class="pipe-node auto"><div class="pn-num">01</div><div class="pn-title">需求解析</div><div class="pn-sub">提取主题/风格/时长</div></div>
+        <div class="pipe-node auto"><div class="pn-num">02</div><div class="pn-title">角色资产准备</div><div class="pn-sub">设定档 + 定妆图</div></div>
+        <div class="pipe-node user"><div class="pn-num">03</div><div class="pn-title">剧本生成 ★确认</div><div class="pn-sub">你确认或微调一次</div></div>
+        <div class="pipe-node auto"><div class="pn-num">04</div><div class="pn-title">场景档案</div><div class="pn-sub">多角度参考图</div></div>
+        <div class="pipe-node auto"><div class="pn-num">05</div><div class="pn-title">分镜编排</div><div class="pn-sub">规避 AI 短板</div></div>
+        <div class="pipe-node auto"><div class="pn-num">06</div><div class="pn-title">逐镜头视频生成</div><div class="pn-sub">批量 5-10 条</div></div>
+        <div class="pipe-node auto"><div class="pn-num">07</div><div class="pn-title">一致性校验</div><div class="pn-sub">不达标自动重生成</div></div>
+        <div class="pipe-node auto"><div class="pn-num">08</div><div class="pn-title">配音配乐</div><div class="pn-sub">中文情感 TTS</div></div>
+        <div class="pipe-node auto"><div class="pn-num">09</div><div class="pn-title">剪辑拼接</div><div class="pn-sub">FFmpeg + 调色</div></div>
+        <div class="pipe-node auto"><div class="pn-num">10</div><div class="pn-title">质量校验</div><div class="pn-sub">一致性评分</div></div>
+        <div class="pipe-node auto"><div class="pn-num">11</div><div class="pn-title">成品交付</div><div class="pn-sub">多格式输出</div></div>
+      </div>
+      <p class="center muted" style="margin-top:18px;font-size:14px">★ 标记环节为需求方唯一参与点 · 其余均由 Agent 全自动</p>
+
+      <div class="card" style="margin-top:26px">
+        <h3>流程设计要点</h3>
+        <ul style="line-height:2;margin:0">
+          <li><b>角色资产准备是第一步</b>——所有后续模块都依赖角色设定档，从源头锁定一致性。</li>
+          <li><b>每个镜头生成后立即做一致性校验</b>，不达标自动重生成（最多 3 次）。</li>
+          <li>同一镜头批量生成 5-10 条，自动筛除物理穿模 / 角色漂移的废片。</li>
+          <li>剪辑拼接阶段统一应用调色 LUT，强制色调与光影一致。</li>
+          <li>全流程自动化，需求方只在剧本环节参与一次确认。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+</body>
+</html>

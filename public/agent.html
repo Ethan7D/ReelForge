@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能装配 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .agent-layout { display:grid; grid-template-columns: 340px 1fr; gap:20px; align-items:start; }
+    .agent-panel { border:1px solid var(--line); background:var(--panel); border-radius:10px; padding:20px; }
+    .agent-panel h3 { margin:0 0 14px; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:.3px; }
+    .agent-stack { display:grid; gap:14px; }
+
+    /* 素材上传区 */
+    .upload-zone {
+      border:2px dashed var(--line);
+      border-radius:10px;
+      padding:28px 16px;
+      text-align:center;
+      cursor:pointer;
+      transition:border-color .2s, background .2s;
+      background:rgba(79,70,229,.02);
+    }
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--brand);
+      background: rgba(79,70,229,.06);
+    }
+    .upload-zone .icon { font-size:32px; margin-bottom:8px; opacity:.5; }
+    .upload-zone .hint { color:var(--muted); font-size:13px; line-height:1.6; }
+    .upload-zone .hint strong { color:var(--ink); }
+
+    /* 已上传素材列表 */
+    .material-list { display:grid; gap:8px; max-height:280px; overflow-y:auto; }
+    .material-item {
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border:1px solid var(--line); border-radius:8px;
+      background:#fff;
+      transition:border-color .2s;
+    }
+    .material-item:hover { border-color: var(--brand); }
+    .material-item .thumb {
+      width:44px; height:44px; border-radius:6px;
+      object-fit:cover; flex-shrink:0;
+      background:rgba(79,70,229,.06);
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; color:var(--brand);
+    }
+    .material-item .info { flex:1; min-width:0; }
+    .material-item .info .name { font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .material-item .info .meta { font-size:11px; color:var(--muted); margin-top:2px; }
+    .material-item .type-tag {
+      padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600;
+      background:rgba(79,70,229,.08); color:var(--brand); flex-shrink:0;
+    }
+    .material-item .rm-btn {
+      width:26px; height:26px; border-radius:50%; border:none;
+      background:rgba(220,38,38,.08); color:#dc2626;
+      cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; transition:background .15s;
+    }
+    .material-item .rm-btn:hover { background:rgba(220,38,38,.15); }
+
+    /* 素材类型选择 */
+    .type-picker {
+      display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;
+    }
+    .type-picker label {
+      padding:4px 10px; border-radius:5px; border:1px solid var(--line);
+      font-size:12px; cursor:pointer; transition:all .15s;
+      background:#fff; color:var(--muted);
+    }
+    .type-picker input:checked + span,
+    .type-picker label:hover {
+      border-color:var(--brand); color:var(--brand); background:rgba(79,70,229,.05);
+    }
+    .type-picker input { display:none; }
+
+    /* 装配结果 */
+    .agent-result { display:grid; gap:14px; }
+    .binding-row {
+      display:grid; grid-template-columns: 1fr auto auto; gap:12px; align-items:center;
+      border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+      background:#fff; transition:border-color .2s;
+    }
+    .binding-row:hover { border-color: rgba(79,70,229,.3); }
+    .binding-row .slot-name { font-weight:700; font-size:14px; color:var(--ink); }
+    .binding-row .reason { color:var(--muted); font-size:12px; line-height:1.5; margin-top:3px; }
+    .binding-row .match-material {
+      display:flex; align-items:center; gap:8px;
+      padding:6px 12px; border-radius:6px;
+      background:rgba(79,70,229,.06); border:1px solid rgba(79,70,229,.15);
+    }
+    .binding-row .match-material .mini-thumb {
+      width:32px; height:32px; border-radius:5px; object-fit:cover;
+    }
+    .binding-row .match-material .mat-name { font-size:12px; font-weight:600; color:var(--ink); }
+    .binding-row .conf-badge {
+      padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;
+    }
+    .conf-badge.high { background:rgba(34,197,94,.1); color:#16a34a; }
+    .conf-badge.mid { background:rgba(245,158,11,.1); color:#d97706; }
+    .conf-badge.low { background:rgba(239,68,68,.1); color:#dc2626; }
+
+    .unmatched-card {
+      border:1px dashed var(--line); border-radius:10px; padding:14px 16px;
+      background:rgba(239,68,68,.02);
+    }
+    .unmatched-card .slot-name { font-weight:700; color:#dc2626; }
+    .unmatched-card .suggestion { color:var(--muted); font-size:12px; margin-top:4px; }
+
+    .json-view {
+      white-space:pre-wrap; overflow:auto; max-height:300px;
+      padding:16px; border-radius:10px; border:1px solid var(--line);
+      background:rgba(15,23,42,.03); font-size:12px; line-height:1.6;
+      font-family:'Cascadia Code','Fira Code',monospace;
+    }
+    .agent-empty {
+      border:1px dashed var(--line); border-radius:10px; padding:36px;
+      color:var(--muted); text-align:center; font-size:14px;
+    }
+    .result-summary {
+      display:flex; gap:12px; flex-wrap:wrap;
+      padding:12px 16px; border-radius:10px;
+      background:linear-gradient(135deg, rgba(79,70,229,.04), rgba(79,70,229,.02));
+      border:1px solid rgba(79,70,229,.12);
+    }
+    .result-summary .stat {
+      font-size:13px; color:var(--ink);
+    }
+    .result-summary .stat b { color:var(--brand); }
+
+    @media (max-width: 900px) {
+      .agent-layout { grid-template-columns:1fr; }
+      .binding-row { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body class="theme-dark" data-page="dashboard">
+  <header class="site-header"></header>
+
+  <div class="app-shell">
+    <aside class="sidebar"></aside>
+
+    <main class="app-main">
+      <div class="app-head">
+        <div>
+          <div class="crumbs">ReelForge 控制台</div>
+          <div class="page-title">智能装配</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">上传你的素材，选择模板包，AI 自动匹配每个槽位。</div>
+        </div>
+        <button class="btn btn-primary" id="assembleBtn" disabled>开始装配</button>
+      </div>
+
+      <div class="agent-layout">
+        <!-- 左：输入 -->
+        <section class="agent-panel">
+          <h3>装配输入</h3>
+          <div class="agent-stack">
+            <!-- 模板包 -->
+            <div class="field">
+              <label>模板包</label>
+              <select id="packSelect"><option value="">加载中...</option></select>
+            </div>
+
+            <!-- 素材上传 -->
+            <div class="field">
+              <label>我的素材 <span id="materialCount" class="muted">(0)</span></label>
+              <div class="upload-zone" id="uploadZone">
+                <div class="icon">📁</div>
+                <div class="hint">
+                  <strong>点击或拖拽上传素材</strong><br>
+                  支持图片（JPG/PNG/WebP）和文本描述<br>
+                  单个文件不超过 32MB
+                </div>
+              </div>
+              <input type="file" id="fileInput" multiple accept="image/*" style="display:none" />
+            </div>
+
+            <!-- 已上传素材列表 -->
+            <div id="materialListWrap" style="display:none">
+              <div class="material-list" id="materialList"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 右：结果 -->
+        <section class="agent-panel">
+          <h3>装配结果</h3>
+          <div id="resultWrap" class="agent-result">
+            <div class="agent-empty">选择模板包并上传素材后开始装配。</div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script src="js/agent.js"></script>
+</body>
+</html>

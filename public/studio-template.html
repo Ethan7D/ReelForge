@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>模板工作台 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="theme-dark" data-page="studio-template">
+  <header class="site-header"></header>
+
+  <div class="studio">
+    <div class="studio-top">
+      <a class="back" href="templates.html">← 返回模板项目</a>
+      <div class="studio-title">
+        <h1 id="projTitle" class="editable-title"><span id="projTitleText">加载中…</span><button type="button" class="title-edit-btn" id="projTitleEditBtn" title="点击修改项目名称">✎</button></h1>
+        <input type="text" id="projTitleInput" class="studio-title-input" style="display:none" placeholder="输入项目名称…" />
+        <div class="studio-sub" id="projSub"></div>
+      </div>
+    </div>
+
+    <!-- 三步步骤条 -->
+    <div class="stepper" id="stepper">
+      <button class="step active" data-step="0"><span class="num">1</span><span>确认剧本</span></button>
+      <button class="step" data-step="1"><span class="num">2</span><span>上传素材</span></button>
+      <button class="step" data-step="2"><span class="num">3</span><span>一键生成</span></button>
+    </div>
+
+    <div class="stage-wrap">
+
+      <!-- Step 0: 确认剧本（只读预览） -->
+      <section class="stage card" data-stage="0">
+        <h2>确认剧本与设定</h2>
+        <p class="muted">以下是模板内置的剧本、人物与分镜。确认无误后进入下一步上传你的本地素材。</p>
+
+        <div class="tmpl-preview-summary" id="tmplPreviewSummary"></div>
+
+        <div style="margin-top:16px">
+          <span class="sub-head">分镜清单（共 <b id="shotCount">0</b> 镜）</span>
+        </div>
+        <div class="board-table-wrap">
+          <table class="board-table" id="boardTable">
+            <thead><tr><th class="col-num">#</th><th class="col-scene">画面内容</th><th>景别</th><th>运动</th><th>角度</th><th>台词</th><th class="col-slot">素材槽位</th></tr></thead>
+            <tbody id="shotList"></tbody>
+          </table>
+        </div>
+
+        <div class="stage-actions">
+          <button class="btn btn-ghost" id="previewTmplBtn" type="button">🎬 预览模板</button>
+          <button class="btn btn-primary" id="next0Btn" type="button">确认，上传素材 →</button>
+        </div>
+      </section>
+
+      <!-- Step 1: 上传素材（核心交互页） -->
+      <section class="stage card" data-stage="1" style="display:none">
+        <h2>上传你的本地素材</h2>
+        <p class="muted">根据模板剧本需要，分栏上传人物素材和场景素材。每个槽位对应一个镜头画面，上传你的图片或视频替代 AI 生成的画面。</p>
+
+        <div class="slot-list" id="slotList"></div>
+
+        <div class="stage-actions">
+          <button class="btn btn-ghost" id="back0Btn" type="button">← 返回修改</button>
+          <button class="btn btn-primary" id="next1Btn" type="button">素材已就绪，开始生成 →</button>
+        </div>
+      </section>
+
+      <!-- Step 2: 一键生成 -->
+      <section class="stage card" data-stage="2" style="display:none">
+        <h2>生成视频</h2>
+        <p class="muted">素材已就绪，点击下方按钮开始合成最终成片。</p>
+
+        <div class="tmpl-gen-summary" id="tmplGenSummary"></div>
+        <div class="prod-status" id="prodStatus"></div>
+
+        <div class="stage-actions">
+          <button class="btn btn-ghost" id="back1Btn" type="button">← 返回调整</button>
+          <button class="btn btn-primary" id="genBtn" type="button">⚡ 生成视频</button>
+        </div>
+
+        <div class="merged-preview" id="preview" style="display:none;margin-top:16px"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="site-footer"></footer>
+
+  <!-- 模板预览弹窗 -->
+  <div class="modal-backdrop" id="previewModal" style="display:none">
+    <div class="modal tmpl-preview-modal">
+      <h3 id="previewModalTitle">模板预览</h3>
+      <div class="tmpl-preview-body" id="tmplPreviewBody"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+        <button class="btn btn-ghost" type="button" id="previewCloseBtn">关闭</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/site.js"></script>
+  <script src="js/studio-template.js"></script>
+</body>
+</html>

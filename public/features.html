@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>核心能力 · ReelForge</title>
+  <meta name="description" content="ReelForge 核心能力：角色先建策略、一句话出片、全流程自动化、一致性校验、批量渲染、多格式多语言、行业模板、成本治理。" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="features">
+  <header class="site-header"></header>
+
+  <!-- 核心能力 -->
+  <section class="block" style="padding-top:54px">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">核心能力</span>
+        <h2>八项能力，覆盖视频生产全链路</h2>
+        <p>从角色设定到成片交付，ReelForge 把生产链条上的每一环都变成 Agent 可自动执行的环节。</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="card"><div class="ic">🧬</div><h3>角色先建策略</h3></div>
+        <div class="card"><div class="ic">⚡</div><h3>一句话出片</h3></div>
+        <div class="card"><div class="ic">🧩</div><h3>全流程自动化</h3></div>
+        <div class="card"><div class="ic">🔍</div><h3>一致性校验</h3></div>
+        <div class="card"><div class="ic">📦</div><h3>批量与队列渲染</h3></div>
+        <div class="card"><div class="ic">🌐</div><h3>多格式 / 多语言</h3></div>
+        <div class="card"><div class="ic">📁</div><h3>行业模板库</h3></div>
+        <div class="card"><div class="ic">📊</div><h3>成本与用量治理</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 六大痛点优先级矩阵 -->
+  <section class="block">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">痛点优先级矩阵</span>
+        <h2>我们重点解决什么</h2>
+        <p>以「角色先建」为纲，以「剧本规避」为策，以「批量筛选 + 一致性校验」为兜底。</p>
+      </div>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <div class="pc-head"><h3>角色一致性</h3><span class="pain-prio p0">P0 致命</span></div>
+          <p>同一角色切镜头后「变脸」：发型变、五官漂移、服装颜色不同。</p>
+          <div class="solve"><b>应对：</b>角色先建 + LoRA + 参考图 + 换脸 + 校验</div>
+          <div class="rate">可解决程度 ≈ 70%（初期 70% 自动 + 30% 人工兜底）</div>
+        </div>
+        <div class="pain-card">
+          <div class="pc-head"><h3>场景一致性</h3><span class="pain-prio p0">P0 高</span></div>
+          <p>同一房间换角度后布局变化，窗户位置移动、光影不一致。</p>
+          <div class="solve"><b>应对：</b>多角度参考图 + 场景档案 + 提示词锁定</div>
+          <div class="rate">可解决程度 ≈ 50%</div>
+        </div>
+        <div class="pain-card">
+          <div class="pc-head"><h3>口型同步</h3><span class="pain-prio p1">P1 中</span></div>
+          <p>角色嘴型与台词不匹配，中文场景尤其明显。</p>
+          <div class="solve"><b>应对：</b>先无声视频 → TTS → Wav2Lip 驱动口型</div>
+          <div class="rate">可解决程度 ≈ 80%</div>
+        </div>
+        <div class="pain-card">
+          <div class="pc-head"><h3>镜头拼接与节奏</h3><span class="pain-prio p1">P1 高</span></div>
+          <p>单次生成 5-15 秒，一集需 6-20 个镜头拼接，拼接处跳变。</p>
+          <div class="solve"><b>应对：</b>镜头编排器 + 相邻镜头一致性校验</div>
+          <div class="rate">可解决程度 ≈ 60%</div>
+        </div>
+        <div class="pain-card">
+          <div class="pc-head"><h3>动作 / 物理</h3><span class="pain-prio p1">P1 中高</span></div>
+          <p>走路滑步、手部穿模、物理接触逻辑错误。</p>
+          <div class="solve"><b>应对：</b>剧本阶段规避复杂动作 + 批量筛选废片</div>
+          <div class="rate">可解决程度 ≈ 30%（以规避为主）</div>
+        </div>
+        <div class="pain-card">
+          <div class="pc-head"><h3>光影连贯</h3><span class="pain-prio p2">P2 中</span></div>
+          <p>同场景不同镜头色调跳变，阴影方向不一致。</p>
+          <div class="solve"><b>应对：</b>光影提示词锁定 + 后期 LUT 统一调色</div>
+          <div class="rate">可解决程度 ≈ 40%（后期调色兜底）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block bg-soft">
+    <div class="container">
+      <div class="cta-band">
+        <h2>想亲手试试？</h2>
+        <p>注册即可进入演示控制台，创建一个由 Agent 驱动的生产项目。</p>
+        <a class="btn btn-primary btn-lg" href="auth.html#register">免费开始</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+</body>
+</html>

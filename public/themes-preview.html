@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReelForge 视觉美化方案预览</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: #eef0f4;
+    color: #111;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px 64px;
+  }
+  .page-head { max-width: 1060px; margin: 0 auto 28px; }
+  .page-head h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: -.01em; }
+  .page-head p { color: #5b6178; margin: 0; font-size: 15px; max-width: 760px; line-height: 1.6; }
+
+  .grid { max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ---- scheme scoping via CSS variables ---- */
+  .scheme { border-radius: 18px; overflow: hidden; border: 1px solid #e3e6ee; box-shadow: 0 12px 34px rgba(15,18,34,.08); }
+  .scheme-head { padding: 16px 18px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .scheme-head .name { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .scheme-head .desc { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+  .scheme-body { padding: 18px; background: var(--bg); color: var(--ink); }
+
+  /* generic components (theme-driven) */
+  .nav { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .logo { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(120deg, var(--brand), var(--brand-2)); }
+  .brand { font-weight: 800; font-size: 15px; }
+  .nav-links { margin-left: 6px; display: flex; gap: 4px; }
+  .nav-links a { padding: 6px 10px; border-radius: 999px; color: var(--muted); font-weight: 600; font-size: 12.5px; }
+  .nav-links a:hover { color: var(--ink); background: var(--brand-soft); }
+  .nav-right { margin-left: auto; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 16px; border-radius: var(--btn-radius, 999px); border: 1px solid transparent;
+    font-size: 13.5px; font-weight: 600; cursor: pointer; transition: .18s ease; font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--btn-bg, linear-gradient(120deg, var(--brand), var(--brand-2)));
+    color: #fff; box-shadow: var(--btn-shadow, 0 4px 14px rgba(109,94,252,.28));
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--btn-shadow-hover, 0 8px 24px rgba(109,94,252,.4)); }
+  .btn-ghost { background: var(--btn-ghost-bg, #fff); border-color: var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
+  .btn-sm { padding: 7px 13px; font-size: 12.5px; }
+
+  .hero-mini { margin: 4px 0 20px; }
+  .kicker { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
+  .grad-text { background: linear-gradient(120deg, var(--brand), var(--brand-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-mini h2 { font-size: 21px; margin: 0 0 8px; line-height: 1.25; letter-spacing: -.01em; }
+  .hero-mini p { color: var(--muted); font-size: 13px; margin: 0 0 14px; line-height: 1.55; }
+  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .proj-card { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--bg); }
+  .proj-card h4 { margin: 0 0 5px; font-size: 14.5px; }
+  .proj-card .meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .proj-card .row { display: flex; gap: 8px; }
+
+  .steps { display: flex; gap: 8px; margin-top: 18px; }
+  .step { flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 10px; padding: 9px 4px; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .step.active { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
+
+  /* ===== Scheme A: 渐变精品 (refined current) ===== */
+  .scheme-a {
+    --bg: #ffffff; --bg-soft: #f6f7fb; --ink: #0f1222; --muted: #5b6178; --line: #e7e9f2;
+    --brand: #6d5efc; --brand-2: #d946a6; --brand-soft: #efeaff;
+    --btn-radius: 999px;
+    --btn-shadow: 0 4px 14px rgba(109,94,252,.28);
+    --btn-shadow-hover: 0 8px 22px rgba(109,94,252,.42);
+    --btn-ghost-bg: #fff;
+  }
+  /* ===== Scheme B: 创作者暗黑 (creator dark) ===== */
+  .scheme-b {
+    --bg: #0b0d17; --bg-soft: #14162a; --ink: #ffffff; --muted: #9aa0b5; --line: #2a2d44;
+    --brand: #7c5cff; --brand-2: #ff4d9d; --brand-soft: rgba(124,92,255,.18);
+    --btn-radius: 999px;
+    --btn-shadow: 0 0 22px rgba(124,92,255,.45);
+    --btn-shadow-hover: 0 0 30px rgba(255,77,157,.55);
+    --btn-ghost-bg: rgba(255,255,255,.02);
+  }
+  .scheme-b .proj-card, .scheme-b .step { background: #14162a; }
+  .scheme-b .btn-ghost { color: #fff; border-color: rgba(255,255,255,.28); }
+  .scheme-b .btn-ghost:hover { border-color: var(--brand); color: #fff; }
+  .scheme-b .scheme-head { background: #14162a; }
+  .scheme-b .scheme-body { background: #0b0d17; }
+
+  /* ===== Scheme C: 极简留白 (minimal airy) ===== */
+  .scheme-c {
+    --bg: #ffffff; --bg-soft: #fafafa; --ink: #111111; --muted: #6b7280; --line: #ececec;
+    --brand: #4f46e5; --brand-2: #4f46e5; --brand-soft: #eef0ff;
+    --btn-radius: 10px;
+    --btn-bg: #4f46e5;
+    --btn-shadow: 0 3px 10px rgba(79,70,229,.22);
+    --btn-shadow-hover: 0 6px 16px rgba(79,70,229,.34);
+    --btn-ghost-bg: #fff;
+  }
+  .scheme-c .btn-primary { background: var(--btn-bg); }
+  .scheme-c .proj-card { box-shadow: none; }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>ReelForge 视觉美化方案预览</h1>
+    <p>三种方向都基于现有结构（导航 / Hero / 项目卡片 / 工作台步骤条）重新着色与重构组件。打开页面即可对比手感，告诉我选哪个，我直接套用到 Dashboard、Studio 与营销页。</p>
+  </div>
+
+  <div class="grid">
+    <!-- Scheme A -->
+    <div class="scheme scheme-a">
+      <div class="scheme-head">
+        <div class="name">A · 渐变精品</div>
+        <div class="desc">保留现有紫粉基调，强化层次：渐变更饱满、按钮带柔光、卡片微高亮。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav">
+          <div class="logo"></div><div class="brand">ReelForge</div>
+          <div class="nav-links"><a>能力</a><a>案例</a></div>
+          <div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div>
+        </div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary">免费试拍</button>
+            <button class="btn btn-ghost">查看案例</button>
+          </div>
+        </div>
+        <div class="proj-card">
+          <h4>都市悬疑短剧 · 第 3 集</h4>
+          <div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div>
+          <div class="row">
+            <button class="btn btn-primary btn-sm">继续制作</button>
+            <button class="btn btn-ghost btn-sm">打开</button>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">解析</div><div class="step">脚本</div>
+          <div class="step active">分镜</div><div class="step">成片</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scheme B -->
+    <div class="scheme scheme-b">
+      <div class="scheme-head">
+        <div class="name">B · 创作者暗黑</div>
+        <div class="desc">暗色优先、电影工具感：深色画布 + 霓虹紫粉 + 发光按钮，像专业剪辑台。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav">
+          <div class="logo"></div><div class="brand">ReelForge</div>
+          <div class="nav-links"><a>能力</a><a>案例</a></div>
+          <div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div>
+        </div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary">免费试拍</button>
+            <button class="btn btn-ghost">查看案例</button>
+          </div>
+        </div>
+        <div class="proj-card">
+          <h4>都市悬疑短剧 · 第 3 集</h4>
+          <div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div>
+          <div class="row">
+            <button class="btn btn-primary btn-sm">继续制作</button>
+            <button class="btn btn-ghost btn-sm">打开</button>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">解析</div><div class="step">脚本</div>
+          <div class="step active">分镜</div><div class="step">成片</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scheme C -->
+    <div class="scheme scheme-c">
+      <div class="scheme-head">
+        <div class="name">C · 极简留白</div>
+        <div class="desc">单一靛蓝、克制留白：去掉渐变与发光，按钮偏方正，编辑感、更可信。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav">
+          <div class="logo"></div><div class="brand">ReelForge</div>
+          <div class="nav-links"><a>能力</a><a>案例</a></div>
+          <div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div>
+        </div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary">免费试拍</button>
+            <button class="btn btn-ghost">查看案例</button>
+          </div>
+        </div>
+        <div class="proj-card">
+          <h4>都市悬疑短剧 · 第 3 集</h4>
+          <div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div>
+          <div class="row">
+            <button class="btn btn-primary btn-sm">继续制作</button>
+            <button class="btn btn-ghost btn-sm">打开</button>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">解析</div><div class="step">脚本</div>
+          <div class="step active">分镜</div><div class="step">成片</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

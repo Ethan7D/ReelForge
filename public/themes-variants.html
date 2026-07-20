@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReelForge 暗黑主题 · 配色/质感变体预览</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: radial-gradient(1200px 700px at 80% -10%, rgba(124,92,255,.10), transparent 60%),
+                radial-gradient(900px 600px at 0% 110%, rgba(255,77,157,.06), transparent 55%),
+                #07080f;
+    color: #e7e9f5;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px 64px;
+  }
+  .page-head { max-width: 1280px; margin: 0 auto 26px; }
+  .page-head h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: -.01em; }
+  .page-head p { color: #9aa0b5; margin: 0; font-size: 15px; max-width: 900px; line-height: 1.6; }
+
+  .grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ---- scheme scoping via CSS variables ---- */
+  .scheme { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 18px 44px rgba(0,0,0,.45); background: var(--bg); }
+  .scheme-head { padding: 15px 17px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .scheme-head .name { font-weight: 800; font-size: 15px; color: #fff; display:flex; align-items:center; gap:8px; }
+  .scheme-head .name .swatch { width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(120deg, var(--brand), var(--brand-2)); box-shadow: 0 0 10px var(--brand); }
+  .scheme-head .desc { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.55; }
+  .scheme-head .tag { display:inline-block; margin-left:auto; font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:999px; background:rgba(124,92,255,.18); color:#c7d2fe; }
+  .scheme-body { padding: 17px; background: var(--bg); }
+
+  /* generic components (theme-driven) */
+  .nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .logo { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(120deg, var(--brand), var(--brand-2)); box-shadow: 0 0 14px var(--brand); }
+  .brand { font-weight: 800; font-size: 15px; color:#fff; }
+  .nav-links { margin-left: 6px; display: flex; gap: 4px; }
+  .nav-links a { padding: 6px 10px; border-radius: 999px; color: var(--muted); font-weight: 600; font-size: 12.5px; cursor:pointer; }
+  .nav-links a:hover { color: #fff; background: rgba(255,255,255,.06); }
+  .nav-right { margin-left: auto; }
+
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 16px; border-radius: 999px; border: 1px solid transparent; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: .18s ease; font-family: inherit; }
+  .btn-primary { background: linear-gradient(120deg, var(--brand), var(--brand-2)); color: #fff; box-shadow: var(--btn-shadow); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--btn-shadow-hover); }
+  .btn-ghost { background: rgba(255,255,255,.03); border-color: rgba(255,255,255,.22); color: #fff; }
+  .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
+  .btn-sm { padding: 7px 13px; font-size: 12.5px; }
+
+  .hero-mini { margin: 4px 0 18px; border-radius: 14px; padding: 16px; background: var(--bg-soft); border:1px solid var(--line); }
+  .kicker { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
+  .grad-text { background: linear-gradient(120deg, var(--brand), var(--brand-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-mini h2 { font-size: 19px; margin: 0 0 8px; line-height: 1.28; letter-spacing: -.01em; color:#fff; }
+  .hero-mini p { color: var(--muted); font-size: 12.5px; margin: 0 0 13px; line-height: 1.55; }
+  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .proj-card { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--bg-soft); }
+  .proj-card h4 { margin: 0 0 5px; font-size: 14.5px; color:#fff; }
+  .proj-card .meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .proj-card .row { display: flex; gap: 8px; }
+
+  .stat-row { display:flex; gap:8px; margin: 14px 0; }
+  .stat-chip { flex:1; border:1px solid var(--line); border-radius:10px; padding:9px; background:var(--bg-soft); text-align:center; }
+  .stat-chip b { display:block; font-size:15px; color:var(--brand); }
+  .stat-chip span { font-size:10.5px; color:var(--muted); }
+
+  .steps { display: flex; gap: 8px; margin-top: 16px; }
+  .step { flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 10px; padding: 9px 4px; font-size: 11.5px; font-weight: 600; color: var(--muted); background: var(--bg-soft); }
+  .step.active { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); box-shadow: 0 0 14px rgba(124,92,255,.18) inset; }
+
+  /* ===== V1: 霓虹紫粉 (当前已实施) ===== */
+  .scheme-v1 {
+    --bg: #0b0d17; --bg-soft: #14162a; --muted: #9aa0b5; --line: #2a2d44;
+    --brand: #7c5cff; --brand-2: #ff4d9d; --brand-soft: rgba(124, 92, 255, .16);
+    --btn-shadow: 0 0 20px rgba(124, 92, 255, .45);
+    --btn-shadow-hover: 0 0 30px rgba(255, 77, 157, .5);
+  }
+  /* ===== V2: 赛博青蓝 (cool tech) ===== */
+  .scheme-v2 {
+    --bg: #070d14; --bg-soft: #0e1a26; --muted: #8fa6b8; --line: #1d3346;
+    --brand: #22d3ee; --brand-2: #3b82f6; --brand-soft: rgba(34, 211, 238, .14);
+    --btn-shadow: 0 0 20px rgba(34, 211, 238, .4);
+    --btn-shadow-hover: 0 0 30px rgba(59, 130, 246, .5);
+  }
+  /* ===== V3: 极光紫绿 (AIGC natural) ===== */
+  .scheme-v3 {
+    --bg: #0a0c16; --bg-soft: #141a2c; --muted: #97a0bc; --line: #283150;
+    --brand: #8b5cf6; --brand-2: #2dd4bf; --brand-soft: rgba(139, 92, 246, .15);
+    --btn-shadow: 0 0 20px rgba(139, 92, 246, .4);
+    --btn-shadow-hover: 0 0 30px rgba(45, 212, 191, .45);
+  }
+  /* ===== V4: 暖阳橙红 (warm drama) ===== */
+  .scheme-v4 {
+    --bg: #120b0b; --bg-soft: #1f1212; --muted: #c2a59c; --line: #3a2422;
+    --brand: #fb923c; --brand-2: #f43f5e; --brand-soft: rgba(251, 146, 60, .14);
+    --btn-shadow: 0 0 20px rgba(251, 146, 60, .4);
+    --btn-shadow-hover: 0 0 30px rgba(244, 63, 94, .48);
+  }
+  /* ===== V5: 电光靛紫 (mono restrained) ===== */
+  .scheme-v5 {
+    --bg: #0a0b1a; --bg-soft: #12142b; --muted: #9aa0c8; --line: #262a52;
+    --brand: #6366f1; --brand-2: #a855f7; --brand-soft: rgba(99, 102, 241, .16);
+    --btn-shadow: 0 0 18px rgba(99, 102, 241, .42);
+    --btn-shadow-hover: 0 0 28px rgba(168, 85, 247, .5);
+  }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>ReelForge 暗黑主题 · 配色 / 质感变体预览</h1>
+    <p>以下 5 个方案都基于你<b>已采用的暗黑画布</b>（步骤条、卡片、工作台结构不变），只调主色与发光气质。V1 是你当前的已实施版本，V2–V5 是新的可选方向。每个卡片含「导航 / Hero / 项目卡 / 数据 / 步骤条」真实组件，直接对比手感，选一个我套进主题变量即可。</p>
+  </div>
+
+  <div class="grid">
+    <!-- V1 霓虹紫粉 -->
+    <div class="scheme scheme-v1">
+      <div class="scheme-head">
+        <div class="name"><span class="swatch"></span>V1 · 霓虹紫粉<span class="tag">当前已实施</span></div>
+        <div class="desc">紫 #7c5cff + 粉 #ff4d9d。最像剪映专业版 / Runway，电影工具调性，活力偏潮流。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav"><div class="logo"></div><div class="brand">ReelForge</div><div class="nav-links"><a>能力</a><a>案例</a></div><div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div></div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta"><button class="btn btn-primary">免费试拍</button><button class="btn btn-ghost">查看案例</button></div>
+        </div>
+        <div class="proj-card"><h4>都市悬疑短剧 · 第 3 集</h4><div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div><div class="row"><button class="btn btn-primary btn-sm">继续制作</button><button class="btn btn-ghost btn-sm">打开</button></div></div>
+        <div class="stat-row"><div class="stat-chip"><b>12</b><span>素材</span></div><div class="stat-chip"><b>4</b><span>分镜</span></div><div class="stat-chip"><b>60%</b><span>进度</span></div></div>
+        <div class="steps"><div class="step">解析</div><div class="step">脚本</div><div class="step active">分镜</div><div class="step">成片</div></div>
+      </div>
+    </div>
+
+    <!-- V2 赛博青蓝 -->
+    <div class="scheme scheme-v2">
+      <div class="scheme-head">
+        <div class="name"><span class="swatch"></span>V2 · 赛博青蓝</div>
+        <div class="desc">青 #22d3ee + 蓝 #3b82f6。更冷、更科技，AI 工程 / 数智感强，像专业渲染后台。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav"><div class="logo"></div><div class="brand">ReelForge</div><div class="nav-links"><a>能力</a><a>案例</a></div><div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div></div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta"><button class="btn btn-primary">免费试拍</button><button class="btn btn-ghost">查看案例</button></div>
+        </div>
+        <div class="proj-card"><h4>都市悬疑短剧 · 第 3 集</h4><div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div><div class="row"><button class="btn btn-primary btn-sm">继续制作</button><button class="btn btn-ghost btn-sm">打开</button></div></div>
+        <div class="stat-row"><div class="stat-chip"><b>12</b><span>素材</span></div><div class="stat-chip"><b>4</b><span>分镜</span></div><div class="stat-chip"><b>60%</b><span>进度</span></div></div>
+        <div class="steps"><div class="step">解析</div><div class="step">脚本</div><div class="step active">分镜</div><div class="step">成片</div></div>
+      </div>
+    </div>
+
+    <!-- V3 极光紫绿 -->
+    <div class="scheme scheme-v3">
+      <div class="scheme-head">
+        <div class="name"><span class="swatch"></span>V3 · 极光紫绿</div>
+        <div class="desc">紫 #8b5cf6 + 翠绿 #2dd4bf。AIGC 自然调，温柔又有未来感，偏"创意生长"。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav"><div class="logo"></div><div class="brand">ReelForge</div><div class="nav-links"><a>能力</a><a>案例</a></div><div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div></div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta"><button class="btn btn-primary">免费试拍</button><button class="btn btn-ghost">查看案例</button></div>
+        </div>
+        <div class="proj-card"><h4>都市悬疑短剧 · 第 3 集</h4><div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div><div class="row"><button class="btn btn-primary btn-sm">继续制作</button><button class="btn btn-ghost btn-sm">打开</button></div></div>
+        <div class="stat-row"><div class="stat-chip"><b>12</b><span>素材</span></div><div class="stat-chip"><b>4</b><span>分镜</span></div><div class="stat-chip"><b>60%</b><span>进度</span></div></div>
+        <div class="steps"><div class="step">解析</div><div class="step">脚本</div><div class="step active">分镜</div><div class="step">成片</div></div>
+      </div>
+    </div>
+
+    <!-- V4 暖阳橙红 -->
+    <div class="scheme scheme-v4">
+      <div class="scheme-head">
+        <div class="name"><span class="swatch"></span>V4 · 暖阳橙红</div>
+        <div class="desc">橙 #fb923c + 玫红 #f43f5e。暖、热情、情绪化，最贴"短剧 / 情感向"内容气质。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav"><div class="logo"></div><div class="brand">ReelForge</div><div class="nav-links"><a>能力</a><a>案例</a></div><div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div></div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta"><button class="btn btn-primary">免费试拍</button><button class="btn btn-ghost">查看案例</button></div>
+        </div>
+        <div class="proj-card"><h4>都市悬疑短剧 · 第 3 集</h4><div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div><div class="row"><button class="btn btn-primary btn-sm">继续制作</button><button class="btn btn-ghost btn-sm">打开</button></div></div>
+        <div class="stat-row"><div class="stat-chip"><b>12</b><span>素材</span></div><div class="stat-chip"><b>4</b><span>分镜</span></div><div class="stat-chip"><b>60%</b><span>进度</span></div></div>
+        <div class="steps"><div class="step">解析</div><div class="step">脚本</div><div class="step active">分镜</div><div class="step">成片</div></div>
+      </div>
+    </div>
+
+    <!-- V5 电光靛紫 -->
+    <div class="scheme scheme-v5">
+      <div class="scheme-head">
+        <div class="name"><span class="swatch"></span>V5 · 电光靛紫</div>
+        <div class="desc">靛 #6366f1 + 紫 #a855f7，单色微渐变。最克制、最"高级感"，弱化花哨、强调专业。</div>
+      </div>
+      <div class="scheme-body">
+        <div class="nav"><div class="logo"></div><div class="brand">ReelForge</div><div class="nav-links"><a>能力</a><a>案例</a></div><div class="nav-right"><button class="btn btn-primary btn-sm">开始创作</button></div></div>
+        <div class="hero-mini">
+          <span class="kicker">AI VIDEO AGENT</span>
+          <h2>一句话，<span class="grad-text">AI 帮你拍出成片</span></h2>
+          <p>需求方全包的视频生产流水线：解析 → 脚本 → 角色 → 分镜 → 成片。</p>
+          <div class="hero-cta"><button class="btn btn-primary">免费试拍</button><button class="btn btn-ghost">查看案例</button></div>
+        </div>
+        <div class="proj-card"><h4>都市悬疑短剧 · 第 3 集</h4><div class="meta">4 个分镜 · 已应用素材 12 · 进度 60%</div><div class="row"><button class="btn btn-primary btn-sm">继续制作</button><button class="btn btn-ghost btn-sm">打开</button></div></div>
+        <div class="stat-row"><div class="stat-chip"><b>12</b><span>素材</span></div><div class="stat-chip"><b>4</b><span>分镜</span></div><div class="stat-chip"><b>60%</b><span>进度</span></div></div>
+        <div class="steps"><div class="step">解析</div><div class="step">脚本</div><div class="step active">分镜</div><div class="step">成片</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

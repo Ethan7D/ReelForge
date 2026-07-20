@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>视频工作台 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="theme-dark" data-page="studio">
+  <header class="site-header"></header>
+
+  <div class="studio">
+    <div class="studio-top">
+      <a class="back" href="dashboard.html">← 返回项目</a>
+      <div class="studio-title">
+        <h1 id="projTitle">加载中…</h1>
+        <div class="studio-sub" id="projSub"></div>
+      </div>
+      <span class="member-badge warn" data-membership style="display:none"></span>
+    </div>
+
+    <div class="mode-banner" id="modeBanner"></div>
+
+    <div class="auto-bar" id="autoBar" style="display:none">
+      <div class="auto-info">
+        <span class="auto-step" id="autoStepText">准备生成…</span>
+        <div class="auto-progress"><div class="auto-progress-fill" id="autoFill"></div></div>
+      </div>
+      <div class="auto-actions">
+        <button class="btn btn-ghost btn-sm" id="autoPauseBtn" type="button">暂停</button>
+      </div>
+    </div>
+
+    <div class="stepper" id="stepper">
+      <button class="step active" data-step="0"><span class="num">1</span><span>需求解析</span></button>
+      <button class="step" data-step="1"><span class="num">2</span><span>剧本</span></button>
+      <button class="step" data-step="2"><span class="num">3</span><span>人物主题</span></button>
+      <button class="step" data-step="3"><span class="num">4</span><span>分镜</span></button>
+      <button class="step" data-step="4"><span class="num">5</span><span>视频制作</span></button>
+    </div>
+
+    <div class="stage-wrap">
+      <!-- Stage 0: 需求分析 -->
+      <section class="stage card" data-stage="0">
+        <h2>① 需求分析</h2>
+        <p class="muted">在这一步把视频目标描述清楚，并<b>设定好后续每一步使用的大模型</b>。一键生成模式下，点击「开始一键生成」后将按此配置自动完成全流程，过程中可随时暂停修改。</p>
+        <p class="import-hint" id="importHint" style="display:none"></p>
+
+        <!-- 需求分组（两列网格） -->
+        <div class="req-grid">
+
+        <!-- 项目基础 -->
+        <div class="req-group">
+          <div class="group-title">项目基础</div>
+          <div class="row2">
+            <div class="field">
+              <label>项目名称 *</label>
+              <input id="projName" placeholder="如：夏季新品种草短视频" />
+            </div>
+            <div class="field">
+              <label>视频类型</label>
+              <select id="projType">
+                <option value="short_video">短视频</option>
+                <option value="ad">广告</option>
+                <option value="course">课程</option>
+                <option value="news">资讯</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 核心需求 -->
+        <div class="req-group">
+          <div class="group-title">核心需求</div>
+          <div class="field">
+            <label>一句话需求 *</label>
+            <textarea id="reqText" placeholder="一句话描述这条视频要表达什么，例如：为夏季新品防晒喷雾做一支 15 秒的种草短视频"></textarea>
+          </div>
+          <div class="row2">
+            <div class="field"><label>视频基调</label><input id="reqTone" placeholder="如：温暖治愈 / 酷炫科技" /></div>
+            <div class="field"><label>目标受众</label><input id="reqAud" placeholder="如：25-35 都市女性" /></div>
+          </div>
+        </div>
+
+        <!-- 制作规格 -->
+        <div class="req-group">
+          <div class="group-title">制作规格</div>
+          <div class="row3">
+            <div class="field">
+              <label>视频时长</label>
+              <select id="reqDuration">
+                <option value="">不限</option>
+                <option value="15">15 秒</option>
+                <option value="30">30 秒</option>
+                <option value="60">60 秒</option>
+                <option value="90">90 秒</option>
+                <option value="120">120 秒</option>
+                <option value="custom">自定义</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>画面比例</label>
+              <select id="reqRatio">
+                <option value="">不限</option>
+                <option value="9:16">9:16 竖屏</option>
+                <option value="16:9">16:9 横屏</option>
+                <option value="1:1">1:1 方屏</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>字幕语言</label>
+              <select id="reqSubtitle">
+                <option value="">无 / 不限</option>
+                <option value="zh">中文</option>
+                <option value="zh-en">中英双语</option>
+                <option value="en">英文</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>投放平台（可多选）</label>
+            <div class="chk-row" id="reqPlatforms">
+              <label class="chk"><input type="checkbox" value="抖音" /> 抖音</label>
+              <label class="chk"><input type="checkbox" value="视频号" /> 视频号</label>
+              <label class="chk"><input type="checkbox" value="小红书" /> 小红书</label>
+              <label class="chk"><input type="checkbox" value="快手" /> 快手</label>
+              <label class="chk"><input type="checkbox" value="B站" /> B站</label>
+              <label class="chk"><input type="checkbox" value="YouTube" /> YouTube</label>
+              <label class="chk"><input type="checkbox" value="其他" /> 其他</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 创意设定 -->
+        <div class="req-group">
+          <div class="group-title">创意设定</div>
+          <div class="row3">
+            <div class="field">
+              <label>期望情绪</label>
+              <select id="reqMood">
+                <option value="">不限</option>
+                <option value="治愈">治愈</option>
+                <option value="燃">燃 / 热血</option>
+                <option value="搞笑">搞笑</option>
+                <option value="高级感">高级感</option>
+                <option value="悬疑">悬疑</option>
+                <option value="温情">温情</option>
+                <option value="国风">国风</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>配音风格</label>
+              <select id="reqVoice">
+                <option value="">无旁白</option>
+                <option value="男声">男声</option>
+                <option value="女声">女声</option>
+                <option value="情感">情感电台腔</option>
+                <option value="新闻腔">新闻播报腔</option>
+                <option value="方言">方言</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>音乐风格</label>
+              <select id="reqMusic">
+                <option value="">不限</option>
+                <option value="轻快">轻快流行</option>
+                <option value="史诗">史诗大气</option>
+                <option value="舒缓">舒缓治愈</option>
+                <option value="电子">电子律动</option>
+                <option value="国风">国风</option>
+                <option value="无">无背景乐</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>参考风格 / 参考影片</label>
+            <input id="reqReference" placeholder="如：苹果极简风、某支爆款短视频链接或描述" />
+          </div>
+        </div>
+
+        <!-- 内容与边界 -->
+        <div class="req-group">
+          <div class="group-title">内容与边界</div>
+          <div class="field">
+            <label>核心卖点 / 产品名</label>
+            <input id="reqSelling" placeholder="如：SPF50+ 清爽不油腻、主打海边场景" />
+          </div>
+          <div class="row2">
+            <div class="field"><label>必含元素</label><textarea id="reqMust" style="min-height:70px" placeholder="必须出现的人物、产品、logo、场景、动作、口号等"></textarea></div>
+            <div class="field"><label>禁忌 / 避雷</label><textarea id="reqAvoid" style="min-height:70px" placeholder="不要出现的画面、表述、竞品、敏感内容等"></textarea></div>
+          </div>
+        </div><!-- /.req-group: 内容与边界 -->
+        </div><!-- /.req-grid -->
+
+        <!-- 模型选择区域（一键生成模式：第一步为后续四步各选一个大模型） -->
+        <div class="model-config" id="modelConfig" style="display:none">
+          <div class="quick-only" id="quickModelConfig" style="display:none">
+            <div class="req-group">
+              <div class="group-title">🤖 大模型配置</div>
+              <p class="model-tip">为以下四个生成步骤各选择一个大模型。只有<span style="color:var(--brand);font-weight:600">已接入</span>的模型会出现在下拉列表中；如未看到可选模型，请先前往「<a href="apikeys.html" style="color:var(--brand)">API 接入</a>」配置密钥。</p>
+              <div class="model-grid">
+                <div class="field"><label>① 剧本生成</label><select id="mScriptQ"></select></div>
+                <div class="field"><label>② 人物/主题</label><select id="mChars"></select></div>
+                <div class="field"><label>③ 分镜设计</label><select id="mBoard"></select></div>
+                <div class="field"><label>④ 视频制作</label><select id="mProd"></select></div>
+              </div>
+              <p class="model-api-tip" id="modelApiTip"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="parsedWrap">
+          <label>解析结果（AI 自动整理）</label>
+          <textarea id="reqParsed" readonly placeholder="点击「AI 解析需求」后，这里会生成结构化的拍摄需求"></textarea>
+        </div>
+        <div class="stage-actions">
+          <button class="btn btn-ghost" id="parseBtn" type="button">AI 解析需求</button>
+          <button class="btn btn-accent" id="startAutoBtn" type="button" style="display:none">⚡ 一键生成全部</button>
+          <button class="btn btn-primary" id="next0" type="button">保存并下一步 →</button>
+        </div>
+      </section>
+
+      <!-- Stage 1: 剧本 -->
+      <section class="stage card" data-stage="1" style="display:none">
+        <h2>② 剧本</h2>
+        <p class="muted">基于需求生成完整脚本。可选择 AI 生成、手动撰写或上传已有剧本。</p>
+        <div class="gen-note" id="genNote1" style="display:none"></div>
+
+        <!-- 本步选模型（可覆盖第一步的默认选择） -->
+        <div class="step-model-picker" id="stepModel1" style="display:none">
+          <div class="field">
+            <label>当前步骤「剧本」大模型 <span class="muted">(可覆盖第一步选择)</span></label>
+            <select id="stepMScript"></select>
+          </div>
+        </div>
+
+        <!-- 输入方式切换 -->
+        <div class="input-tabs" id="scriptTabs">
+          <button type="button" class="tab-btn active" data-tab="scriptGen">AI 生成</button>
+          <button type="button" class="tab-btn" data-tab="scriptWrite">手动撰写</button>
+          <button type="button" class="tab-btn" data-tab="scriptUpload">上传文件</button>
+        </div>
+
+        <!-- 方式1: AI 生成 -->
+        <div class="tab-panel active" id="panel_scriptGen">
+          <p class="muted" style="font-size:12px">将根据第一步的需求解析结果和所选模型自动生成剧本。</p>
+          <button class="btn btn-primary" id="genScriptBtn" type="button">根据需求生成剧本</button>
+        </div>
+
+        <!-- 方式2: 手动撰写 -->
+        <div class="tab-panel" id="panel_scriptWrite" style="display:none">
+          <div class="field">
+            <label>剧本正文</label>
+            <textarea id="scriptText" style="min-height:220px" placeholder="在此撰写剧本，可包含：&#10;· 时间码（00:00-00:03）&#10;· 画面描述与动作&#10;· 旁白/台词&#10;· 字幕提示"></textarea>
+          </div>
+        </div>
+
+        <!-- 方式3: 上传文件 -->
+        <div class="tab-panel" id="panel_scriptUpload" style="display:none">
+          <div class="upload-zone" id="scriptUploadZone">
+            <div class="upload-icon">+</div>
+            <p>点击或拖拽上传剧本文件</p>
+            <p class="muted" style="font-size:11px">支持 .txt / .docx / .pdf 格式</p>
+            <input type="file" id="scriptFileInput" accept=".txt,.docx,.pdf" style="display:none" />
+          </div>
+          <div id="scriptFileInfo" style="display:none" class="upload-info">
+            <span id="scriptFileName"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="clearScriptFile">移除</button>
+          </div>
+          <div class="field" style="margin-top:10px">
+            <label>上传后的剧本内容预览（可编辑）</label>
+            <textarea id="scriptUploadText" style="min-height:180px" placeholder="上传后内容将显示在这里…"></textarea>
+          </div>
+        </div>
+
+        <!-- 剧本统一预览区（可编辑，与上传/手写/AI生成实时同步） -->
+        <div class="field" style="margin-top:14px" id="scriptResultWrap">
+          <label>当前剧本内容 <span class="muted">(可编辑，修改后自动同步)</span></label>
+          <textarea id="scriptPreview" style="min-height:140px;background:#f9fafb" placeholder="选择输入方式并填写/生成后，此处显示最终剧本（可直接编辑）"></textarea>
+        </div>
+
+        <div class="stage-actions">
+          <button class="btn btn-primary" id="next1" type="button">保存并下一步 →</button>
+        </div>
+      </section>
+
+      <!-- Stage 2: 人物主题 -->
+      <section class="stage card" data-stage="2" style="display:none">
+        <h2>③ 人物主题</h2>
+        <p class="muted">设定出镜人物、场景与视觉道具。保证全片形象与风格一致（角色先建策略）。</p>
+        <div class="gen-note" id="genNote2" style="display:none"></div>
+
+        <!-- 本步选模型（可覆盖第一步的默认选择） -->
+        <div class="step-model-picker" id="stepModel2" style="display:none">
+          <div class="field">
+            <label>当前步骤「人物主题」大模型 <span class="muted">(可覆盖第一步选择)</span></label>
+            <select id="stepMChars"></select>
+          </div>
+        </div>
+
+        <!-- 视觉风格 -->
+        <div class="field">
+          <label>整体视觉主题 / 风格</label>
+          <input id="themeStyle" placeholder="如：日系清新、胶片质感、赛博朋克、写实纪实" />
+        </div>
+
+        <!-- 标签页：人物 / 场景 / 道具 -->
+        <div class="char-tabs" id="charTabs">
+          <button type="button" class="char-tab active" data-ctab="characters">人物</button>
+          <button type="button" class="char-tab" data-ctab="scenes">场景</button>
+          <button type="button" class="char-tab" data-ctab="props">道具</button>
+        </div>
+
+        <!-- ===== 人物卡片列表 ===== -->
+        <div class="char-panel active" id="ctab_characters">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="sub-head" style="margin:0">出镜人物</span>
+            <div>
+              <button class="btn btn-ghost btn-sm" id="genCharsBtn" type="button">AI 生成人物设定</button>
+              <button class="btn btn-primary btn-sm" id="addChar" type="button">+ 添加角色</button>
+              <button class="btn btn-primary btn-sm" id="openCharStudioBtn" type="button" style="background:linear-gradient(135deg,#7c5cff,#ff4d9d);border:none;color:#fff;">🎨 打开工作台</button>
+            </div>
+          </div>
+          <div class="card-grid" id="charList"></div>
+          <p class="empty-hint" id="emptyChars" style="display:none">暂无角色，点击「添加角色」或「AI 生成」创建。</p>
+        </div>
+
+        <!-- ===== 场景卡片列表 ===== -->
+        <div class="char-panel" id="ctab_scenes" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="sub-head" style="margin:0">拍摄场景</span>
+            <button class="btn btn-primary btn-sm" id="addScene" type="button">+ 添加场景</button>
+          </div>
+          <div class="card-grid" id="sceneList"></div>
+          <p class="empty-hint" id="emptyScenes" style="display:none">暂无场景，点击「添加场景」创建。</p>
+        </div>
+
+        <!-- ===== 道具卡片列表 ===== -->
+        <div class="char-panel" id="ctab_props" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span class="sub-head" style="margin:0">关键道具</span>
+            <button class="btn btn-primary btn-sm" id="addProp" type="button">+ 添加道具</button>
+          </div>
+          <div class="card-grid" id="propList"></div>
+          <p class="empty-hint" id="emptyProps" style="display:none">暂无道具，点击「添加道具」创建。</p>
+        </div>
+
+        <div class="stage-actions">
+          <button class="btn btn-primary" id="next2" type="button">保存并下一步 →</button>
+        </div>
+      </section>
+
+      <!-- Stage 3: 分镜 -->
+      <section class="stage card" data-stage="3" style="display:none">
+        <h2>④ 分镜</h2>
+        <p class="muted">把剧本拆成可执行的镜头清单，逐镜设定画面内容、景别、运镜、角度、台词与素材。</p>
+        <div class="gen-note" id="genNote3" style="display:none"></div>
+
+        <!-- 本步选模型（可覆盖第一步的默认选择） -->
+        <div class="step-model-picker" id="stepModel3" style="display:none">
+          <div class="field">
+            <label>当前步骤「分镜」大模型 <span class="muted">(可覆盖第一步选择)</span></label>
+            <select id="stepMBoard"></select>
+          </div>
+        </div>
+
+        <!-- 工具栏 -->
+        <div class="board-toolbar">
+          <button class="btn btn-primary btn-sm" id="addShot" type="button">+ 新建一镜</button>
+          <button class="btn btn-ghost btn-sm" id="autoBoardBtn" type="button">自动分镜</button>
+          <span class="muted" style="margin-left:auto;font-size:12px">提示：点击「自动分镜」可根据剧本内容快速生成初版分镜表。</span>
+        </div>
+
+        <!-- 分镜表格 -->
+        <div class="board-table-wrap">
+          <table class="board-table" id="boardTable">
+            <thead>
+              <tr>
+                <th class="col-num">#</th>
+                <th class="col-scene">画面内容</th>
+                <th class="col-select">景别</th>
+                <th class="col-select">运动</th>
+                <th class="col-select">角度</th>
+                <th class="col-dialogue">台词</th>
+                <th class="col-asset">应用的素材</th>
+                <th class="col-add"><button type="button" class="btn btn-ghost btn-sm" id="addBoardCol" title="新增列">+</button></th>
+              </tr>
+            </thead>
+            <tbody id="shotList">
+              <!-- 动态渲染分镜行 -->
+            </tbody>
+          </table>
+        </div>
+        <p class="empty-hint" id="emptyShots" style="display:none">暂无分镜，点击「新建一镜」或「自动分镜」创建。</p>
+
+        <div class="stage-actions" style="margin-top:14px">
+          <button class="btn btn-primary" id="next3" type="button">保存并下一步 →</button>
+        </div>
+      </section>
+
+      <!-- Stage 4: 视频制作（合并分镜成片） -->
+      <section class="stage card" data-stage="4" style="display:none">
+        <h2>⑤ 视频制作</h2>
+        <p class="muted">将上一步每一个分镜的镜头视频逐一拼接合成，产出最终成片。下方先逐镜展示各分镜素材，再点击「合并成片」。</p>
+        <div class="gen-note" id="genNote4" style="display:none"></div>
+
+        <!-- 本步选模型（可覆盖第一步的默认选择） -->
+        <div class="step-model-picker" id="stepModel4" style="display:none">
+          <div class="field">
+            <label>当前步骤「视频制作」大模型 <span class="muted">(可覆盖第一步选择)</span></label>
+            <select id="stepMProd"></select>
+          </div>
+        </div>
+
+        <div class="prod-summary" id="prodSummary"></div>
+
+        <!-- 分镜镜头视频清单 -->
+        <div class="shot-videos-wrap">
+          <div class="sv-head">
+            <span class="sub-head" style="margin:0">分镜镜头视频 <span class="muted">（共 <b id="shotVidCount">0</b> 镜，将依次拼接）</span></span>
+            <button class="btn btn-ghost btn-sm" id="goBoardBtn" type="button">← 返回编辑分镜</button>
+          </div>
+          <div class="shot-video-list" id="shotVideoList"></div>
+        </div>
+
+        <div class="field">
+          <label>成片风格（可选）</label>
+          <input id="prodStyle" placeholder="如：16:9 横屏 / 9:16 竖屏 / 4K" />
+        </div>
+        <div class="prod-status" id="prodStatus"></div>
+        <div class="stage-actions">
+          <button class="btn btn-primary" id="makeBtn" type="button">合并成片</button>
+          <button class="btn btn-ghost" id="save4" type="button">保存</button>
+        </div>
+        <div class="merged-preview" id="preview" style="display:none"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 实体编辑器弹窗（人物/场景/道具详情编辑 + 图片生成） -->
+  <div class="entity-editor-backdrop" id="entityEditorBackdrop">
+    <div class="entity-editor" id="entityEditor">
+      <div class="ee-header">
+        <span class="ee-title" id="eeTitle">编辑详情</span>
+        <button type="button" class="ee-close" id="eeCloseBtn">&times;</button>
+      </div>
+
+      <!-- 图片预览区 -->
+      <div class="ee-preview" id="eePreview">
+        <div class="ee-preview-placeholder" id="eePreviewPlaceholder">暂无图片</div>
+        <img id="eePreviewImg" style="display:none" />
+      </div>
+
+      <!-- 描述输入区（参考截图底部输入框） -->
+      <div class="ee-desc-area">
+        <textarea id="eeDescInput" placeholder="描述人物的外观，如：一个女青年形象，粉色头发，身着黄色泡泡袖衬衫和蓝色吊带裤，白底设定图"></textarea>
+      </div>
+
+      <!-- 工具栏 -->
+      <div class="ee-toolbar">
+        <button type="button" class="ee-tool-btn" id="eeCollapseBtn" title="折叠"><span>&#8964;</span></button>
+        <button type="button" class="ee-tool-btn" id="eeDeleteBtn" title="删除"><span>&#128465;</span></button>
+        <div style="flex:1"></div>
+        <button type="button" class="ee-tool-btn" id="eePresetBtn" title="预设"><span>&#8862;</span> 预设</button>
+        <button type="button" class="ee-tool-btn" id="eeEnhanceBtn" title="AI 增强"><span>&#10024;</span></button>
+        <button type="button" class="ee-tool-btn" id="eeVoiceBtn" title="语音"><span>&#127909;</span></button>
+      </div>
+
+      <!-- 生成控制栏（参考截图底部） -->
+      <div class="ee-gen-bar">
+        <div class="ee-gen-left">
+          <button type="button" class="ee-plus-btn" id="eePlusBtn" title="新增">+</button>
+          <div class="ee-mode-wrap">
+            <select id="eeGenMode" class="ee-select">
+              <option value="text2img">文生图</option>
+              <option value="imgblend">融图模式</option>
+              <option value="triview">三视图生成</option>
+              <option value="panorama">全景生成</option>
+            </select>
+            <span class="ee-mode-arrow">&#9662;</span>
+          </div>
+        </div>
+        <div class="ee-gen-center">
+          <span class="ee-model-label">模型</span>
+          <select id="eeImgModel" class="ee-select-sm">
+            <option value="" disabled>选择图片模型 ↓</option>
+            <optgroup label="✅ 已接入（可用）">
+              <option value="seedream-5.0-lite" class="opt-connected">● Seedream 5.0 Lite</option>
+              <option value="cogview-3-plus" class="opt-connected">● CogView-3-Plus</option>
+            </optgroup>
+            <optgroup label="⏳ 未接入（需配置 API）">
+              <option value="seedream-2.0" class="opt-unconn">○ Seedream 2.0</option>
+              <option value="dall-e-3" class="opt-unconn">○ DALL-E 3</option>
+            </optgroup>
+          </select>
+          <div class="ee-param-group">
+            <div class="ee-param-chip" data-active="16:9">16:9</div>
+            <div class="ee-param-chip">21:9</div>
+            <div class="ee-param-chip">4:3</div>
+            <div class="ee-param-chip">9:16</div>
+            <div class="ee-param-chip">1:1</div>
+          </div>
+          <div class="ee-param-group">
+            <div class="ee-param-chip" data-active="2K">2K</div>
+            <div class="ee-param-chip">720p</div>
+            <div class="ee-param-chip">1080p</div>
+          </div>
+          <div class="ee-param-group">
+            <div class="ee-param-chip" data-active="1">1张</div>
+            <div class="ee-param-chip">2</div>
+            <div class="ee-param-chip">3</div>
+            <div class="ee-param-chip">4</div>
+          </div>
+        </div>
+        <div class="ee-gen-right">
+          <!-- 视频大模型提供商选择（参考截图3） -->
+          <div class="ee-provider-row" id="eeProviderRow">
+            <button type="button" class="ee-provider active" data-pv="jimeng">即梦</button>
+            <button type="button" class="ee-provider" data-pv="kling">可灵</button>
+            <button type="button" class="ee-provider" data-pv="happyhorse">Happy Horse</button>
+            <button type="button" class="ee-provider" data-pv="vidu">Vidu</button>
+            <button type="button" class="ee-provider" data-pv="hailuo">海螺</button>
+            <button type="button" class="ee-provider" data-pv="tongyi">通义</button>
+            <button type="button" class="ee-provider" data-pv="qizhi">奇智</button>
+          </div>
+          <!-- 展开的视频参数面板 -->
+          <div class="ee-video-params" id="eeVideoParams" style="display:none">
+            <div class="ee-vp-row">
+              <span class="ee-vp-label">模型版本</span>
+              <div class="ee-vp-options">
+                <span class="ee-vp-opt">Seedance 2.0</span><span class="ee-vp-opt">Seedance 2.0 Fast</span><span class="ee-vp-opt">Seedance 2.0 Mini</span><span class="ee-vp-opt active">Seedance 1.5 Pro</span>
+              </div>
+            </div>
+            <div class="ee-vp-row">
+              <span class="ee-vp-label">画幅比</span><div class="ee-vp-options"><span class="ee-vp-opt">21:9</span><span class="ee-vp-opt active">16:9</span><span class="ee-vp-opt">4:3</span><span class="ee-vp-opt">9:16</span></div>
+            </div>
+            <div class="ee-vp-row">
+              <span class="ee-vp-label">分辨率</span><div class="ee-vp-options"><span class="ee-vp-opt active">720p</span><span class="ee-vp-opt">1080p</span></div>
+            </div>
+            <div class="ee-vp-row">
+              <span class="ee-vp-label">音画同步</span><div class="ee-vp-options"><span class="ee-vp-opt active">开</span><span class="ee-vp-opt">关</span></div>
+            </div>
+            <div class="ee-vp-row">
+              <span class="ee-vp-label">视频时长</span>
+              <div class="ee-vp-options"><span class="ee-vp-opt">4s</span><span class="ee-vp-opt active">5s</span><span class="ee-vp-opt">6s</span><span class="ee-vp-opt">7s</span><span class="ee-vp-opt">8s</span><span class="ee-vp-opt">9s</span><span class="ee-vp-opt">10s</span><span class="ee-vp-opt">11s</span><span class="ee-vp-opt">12s</span></div>
+            </div>
+            <div class="ee-vp-row">
+              <span class="ee-vp-label">生成数量</span><div class="ee-vp-options"><span class="ee-vp-opt active">1条</span><span class="ee-vp-opt">2</span><span class="ee-vp-opt">3</span><span class="ee-vp-opt">4</span></div>
+            </div>
+          </div>
+          <button type="button" class="ee-generate-btn" id="eeGenerateBtn">
+            <span class="ee-gen-icon">&#9889;</span> 生成
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Token 用量警告弹窗（点击「一键生成全部」时弹出） -->
+  <div class="modal-backdrop" id="tokenWarnModal">
+    <div class="modal">
+      <h3>⚡ 一键生成确认</h3>
+      <p style="color:var(--muted);line-height:1.7;margin:0 0 16px 0;">
+        你即将启动<strong style="color:var(--ink)">全流程自动生成</strong>，系统将依次调用以下大模型完成剧本、人物主题、分镜和视频制作：
+      </p>
+      <div class="token-cost-table" id="tokenCostTable" style="background:var(--bg);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;line-height:2">
+        <!-- 动态填充模型列表 -->
+      </div>
+      <div class="token-warn-box" style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#92400e;line-height:1.6">
+        <strong>⚠️ 注意：</strong>一键生成将消耗你接入的大模型 API Token。请确认各模型已正确配置 API 密钥且有充足余额，避免生成中断。
+      </div>
+      <div class="modal-actions" style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" id="tokenWarnCancel" type="button">取消</button>
+        <button class="btn btn-accent" id="tokenWarnConfirm" type="button">确认，开始生成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 素材制作工作台（点击分镜「去制作」按钮打开）—— 三栏专业布局 -->
+  <div class="material-studio-backdrop" id="materialStudioBackdrop">
+    <div class="material-studio" id="materialStudio">
+      <!-- 顶栏 -->
+      <div class="ms-header">
+        <div class="ms-header-left">
+          <button type="button" class="ms-back-btn" id="msBackBtn" title="返回分镜">← 返回</button>
+          <span class="ms-title" id="msTitle">素材制作工作台</span>
+          <span class="ms-shot-badge" id="msShotBadge">第 1 镜</span>
+        </div>
+        <div class="ms-header-right">
+          <button type="button" class="ms-tool-btn" id="msSaveBtn" title="保存"><span>💾</span></button>
+          <button type="button" class="ms-tool-btn" id="msStarBtn" title="收藏"><span>☆</span></button>
+          <button type="button" class="ms-tool-btn" id="msCopyBtn" title="复制"><span>📋</span></button>
+          <button type="button" class="ms-tool-btn" id="msDownloadBtn" title="下载"><span>⬇</span></button>
+          <div class="ms-divider"></div>
+          <button type="button" class="ms-tool-btn" id="msSearchBtn" title="搜索"><span>🔍</span></button>
+          <input type="text" class="ms-search-input" id="msSearchInput" placeholder="搜索素材…" style="display:none" />
+          <button type="button" class="ms-tool-btn" id="msUploadBtn" title="上传"><span>⬆</span></button>
+          <div class="ms-divider"></div>
+          <button type="button" class="ms-view-btn active" id="msGridViewBtn" title="网格视图"><span>▦</span></button>
+          <button type="button" class="ms-view-btn" id="msListViewBtn" title="列表视图"><span>☰</span></button>
+        </div>
+      </div>
+
+      <!-- 主体三栏：左导航 + 中画布 + 右配置 -->
+      <div class="ms-body">
+        <!-- 左侧：素材分类导航 -->
+        <div class="ms-sidebar" id="msSidebar">
+          <div class="ms-nav-list" id="msNavList">
+            <!-- 图片生成 -->
+            <div class="ms-nav-group" data-group="image">
+              <button type="button" class="ms-nav-item active" data-nav="image">
+                <span class="ms-nav-icon">🖼</span><span class="ms-nav-label">图片生成</span><span class="ms-nav-arrow">▸</span>
+              </button>
+              <div class="ms-nav-sub" id="msSub_image">
+                <button type="button" class="ms-nav-sub-item active" data-sub="text2img"><span class="ms-check">✓</span>文生图</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="imgblend">翻图模式</button>
+              </div>
+            </div>
+            <!-- 视频生成 -->
+            <div class="ms-nav-group" data-group="video">
+              <button type="button" class="ms-nav-item" data-nav="video">
+                <span class="ms-nav-icon">🎬</span><span class="ms-nav-label">视频生成</span><span class="ms-nav-arrow">▸</span>
+              </button>
+              <div class="ms-nav-sub" id="msSub_video" style="display:none">
+                <button type="button" class="ms-nav-sub-item" data-sub="vid-text">文生视频</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="vid-headtail">首尾帧</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="vid-ref">多参考</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="vid-edit">视频编辑</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="vid-motion">动作控制</button>
+              </div>
+            </div>
+            <!-- 配音生成 -->
+            <div class="ms-nav-group" data-group="voice">
+              <button type="button" class="ms-nav-item" data-nav="voice">
+                <span class="ms-nav-icon">🎙️</span><span class="ms-nav-label">配音生成</span><span class="ms-nav-arrow">▸</span>
+              </button>
+              <div class="ms-nav-sub" id="msSub_voice" style="display:none">
+                <button type="button" class="ms-nav-sub-item" data-sub="voice-dub">台词配音</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="voice-clone">音色转换</button>
+              </div>
+            </div>
+            <!-- 音乐制作 -->
+            <div class="ms-nav-group" data-group="music">
+              <button type="button" class="ms-nav-item" data-nav="music">
+                <span class="ms-nav-icon">🎵</span><span class="ms-nav-label">音乐制作</span><span class="ms-nav-arrow">▸</span>
+              </button>
+              <div class="ms-nav-sub" id="msSub_music" style="display:none">
+                <button type="button" class="ms-nav-sub-item" data-sub="music-text">文生音乐</button>
+                <button type="button" class="ms-nav-sub-item" data-sub="music-cover">音乐翻唱</button>
+              </div>
+            </div>
+          </div>
+          <!-- 底部：已应用素材缩略 -->
+          <div class="ms-side-footer" id="msSideFooter">
+            <div class="ms-side-ft-title">已应用素材</div>
+            <div class="ms-thumb-grid" id="msAppliedGrid"></div>
+            <p class="ms-empty-hint" id="msAppliedEmpty">暂无已应用的素材</p>
+          </div>
+        </div>
+
+        <!-- 中间：画布区 + 描述 -->
+        <div class="ms-main">
+          <div class="ms-canvas-wrap">
+            <div class="ms-canvas" id="msCanvas">
+              <div class="ms-canvas-empty" id="msCanvasEmpty">
+                <span class="ms-canvas-icon">🖼</span>
+                <p>暂无数据</p>
+                <p class="muted" style="font-size:12px">选择左侧工具开始创作，或使用底部工具栏生成素材</p>
+              </div>
+              <img id="msCanvasImg" style="display:none;max-width:100%;max-height:100%;object-fit:contain;border-radius:6px" />
+            </div>
+          </div>
+          <!-- 画面描述输入区 -->
+          <div class="scene-desc-input" id="msSceneDescInput">
+            <textarea id="msSceneDesc" class="scene-desc-textarea" placeholder="试试这样写：&quot;主体一位扎着高马尾、身着劲装的女侠，行为正回头警惕地张望。场景身处月光下的竹林小径。风格是写实国风、氛围带有清冷的蓝色调、显得神秘而紧张。&quot;"></textarea>
+            <div class="scene-desc-actions">
+              <div class="scene-desc-left">
+                <button type="button" class="scene-desc-tool" id="msDescCollapse" title="收起">⤋</button>
+                <button type="button" class="scene-desc-tool" id="msDescClear" title="清空">🗑</button>
+              </div>
+              <div class="scene-desc-right">
+                <button type="button" class="scene-desc-tool" id="msDescSearch" title="搜索参考">🔍 搜索参考</button>
+                <button type="button" class="scene-desc-tool" id="msDescPreset" title="预设">☰ 预设</button>
+                <button type="button" class="scene-desc-tool" id="msDescMagic" title="智能优化">✨</button>
+                <button type="button" class="scene-desc-tool" id="msDescVoice" title="语音输入">🎙</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：模型配置面板 -->
+        <div class="ms-right-panel" id="msRightPanel">
+          <div class="ms-rp-title" id="msRpTitle">基础图像指令 · 动态表现综合版</div>
+          <!-- 供应商选择行 -->
+          <div class="rp-provider-row" id="msProvRow"></div>
+          <!-- 供应商描述 -->
+          <div class="rp-prov-desc" id="msProvDesc"></div>
+          <!-- 模型版本选择器 -->
+          <div class="rp-model-row" id="msModelRow">
+            <div class="rp-model-label">模型版本</div>
+            <div class="rp-model-opts" id="msModelOpts"></div>
+          </div>
+          <!-- 模式专属额外选项（如性转优化、音调调整等，由JS动态填充） -->
+          <div id="msExtraOpts" class="ms-rp-extra-opts"></div>
+          <!-- 画幅比 -->
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">画幅比</div>
+            <div class="ms-rp-options" id="msRatioOpts">
+              <span class="ms-rp-opt">21:9</span><span class="ms-rp-opt active">16:9</span><span class="ms-rp-opt">4:3</span><span class="ms-rp-opt">9:16</span><span class="ms-rp-opt">1:1</span>
+            </div>
+          </div>
+          <!-- 分辨率 -->
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">分辨率</div>
+            <div class="ms-rp-options" id="msResOpts">
+              <span class="ms-rp-opt active">720p</span><span class="ms-rp-opt">1080p</span>
+            </div>
+          </div>
+          <!-- 音画同步 -->
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">音画同步</div>
+            <div class="ms-rp-options" id="msSyncOpts">
+              <span class="ms-rp-opt active">开</span><span class="ms-rp-opt">关</span>
+            </div>
+          </div>
+          <!-- 视频时长 -->
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">视频时长</div>
+            <div class="ms-rp-options" id="msDurOpts">
+              <span class="ms-rp-opt">4s</span><span class="ms-rp-opt active">5s</span><span class="ms-rp-opt">6s</span><span class="ms-rp-opt">8s</span><span class="ms-rp-opt">10s</span><span class="ms-rp-opt">12s</span>
+            </div>
+          </div>
+          <!-- 生成数量 -->
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">生成数量</div>
+            <div class="ms-rp-options" id="msCountOpts">
+              <span class="ms-rp-opt active">1条</span><span class="ms-rp-opt">2</span><span class="ms-rp-opt">3</span><span class="ms-rp-opt">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部工具栏 -->
+      <div class="ms-toolbar">
+        <div class="ms-toolbar-left">
+          <span class="ms-tb-hint">|</span>
+          <label class="ms-tb-label">预览本镜</label>
+          <span class="ms-tb-hint">|</span>
+          <label class="ms-tb-label">下载本镜素材</label>
+        </div>
+        <div class="ms-toolbar-center">
+          <span class="ms-summary-tag" id="msSummaryTag">Seedance 1.5 Pro · 16:9 · 1080p · 5s · 1条</span>
+        </div>
+        <div class="ms-toolbar-right">
+          <button type="button" class="ms-tb-tool" id="msTbSearch" title="搜索">🔍</button>
+          <button type="button" class="ms-tb-tool" id="msTbGrid" title="网格视图">▦</button>
+          <button type="button" class="ms-tb-tool" id="msTbTest" title="测试">⚙</button>
+          <button type="button" class="ms-tb-tool" id="msTbVoice" title="语音">🎙</button>
+          <button type="button" class="ms-generate-btn" id="msGenerateBtn">
+            <span class="ms-gen-icon">✨</span> 生成
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 人物主题工作台（第三步「人物主题」使用，同框架+人物管理左栏） -->
+  <div class="char-studio-backdrop" id="charStudioBackdrop">
+    <div class="char-studio" id="charStudio">
+      <!-- 顶栏 -->
+      <div class="ms-header">
+        <div class="ms-header-left">
+          <button type="button" class="ms-back-btn" id="csBackBtn" title="返回人物主题">← 返回</button>
+          <span class="ms-title" id="csTitle">人物管理工作台</span>
+        </div>
+        <div class="ms-header-right">
+          <button type="button" class="ms-tool-btn" id="csSaveBtn" title="保存"><span>💾</span></button>
+          <button type="button" class="ms-tool-btn" id="csAiGenBtn" title="AI 生成"><span>✨</span></button>
+          <div class="ms-divider"></div>
+          <button type="button" class="ms-view-btn active" id="csGridViewBtn"><span>▦</span></button>
+          <button type="button" class="ms-view-btn" id="csListViewBtn"><span>☰</span></button>
+        </div>
+      </div>
+
+      <!-- 主体三栏：左人物栏 + 中画布 + 右配置 -->
+      <div class="ms-body">
+        <!-- 左侧：人物管理面板 -->
+        <div class="ms-sidebar">
+          <div class="cs-left-panel" id="csLeftPanel">
+            <!-- 设定区 -->
+            <div class="cs-section">
+              <div class="cs-section-title">设定</div>
+              <div class="cs-char-card" id="csCharCard">
+                <div class="cs-char-name" id="csCharName">未命名人物</div>
+                <div class="cs-char-desc" id="csCharDesc">暂无主体设定描述</div>
+              </div>
+            </div>
+            <!-- 造型区 -->
+            <div class="cs-section">
+              <div class="cs-section-title">造型</div>
+              <div class="cs-style-actions">
+                <button type="button" class="cs-style-btn" id="csNewStyleBtn">＋ 新建造型</button>
+                <button type="button" class="cs-style-btn cs-style-upload" id="csUploadStyleBtn">⬆ 上传为新造型</button>
+              </div>
+            </div>
+            <!-- 人物列表 -->
+            <div class="cs-section">
+              <div class="cs-char-list" id="csCharList">
+                <!-- 动态渲染 -->
+              </div>
+              <p class="cs-empty-hint" id="csEmptyHint">暂无应用的造型<br/><a href="#" id="csUploadLink" class="cs-link">上传</a> 或使用右侧工具制作</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 中间：预览画布 -->
+        <div class="ms-main">
+          <div class="ms-canvas-wrap">
+            <div class="ms-canvas" id="csCanvas">
+              <div class="ms-canvas-empty" id="csCanvasEmpty">
+                <span class="ms-canvas-icon">👤</span>
+                <p>选择一个人物或造型开始编辑</p>
+                <p class="muted" style="font-size:12px">在左侧面板中选择人物，使用下方工具生成形象图</p>
+              </div>
+              <img id="csCanvasImg" style="display:none;max-width:100%;max-height:100%;object-fit:contain;border-radius:6px" />
+            </div>
+          </div>
+          <!-- 画面描述输入区 -->
+          <div class="scene-desc-input" id="csSceneDescInput">
+            <textarea id="csSceneDesc" class="scene-desc-textarea" placeholder="描述人物形象特征，如：&quot;一位30岁左右的男性，短发利落、五官立体，身穿深色风衣，气质沉稳冷峻。背景为城市天际线夜景。风格偏写实电影感。&quot;"></textarea>
+            <div class="scene-desc-actions">
+              <div class="scene-desc-left">
+                <button type="button" class="scene-desc-tool" id="csDescCollapse" title="收起">⤋</button>
+                <button type="button" class="scene-desc-tool" id="csDescClear" title="清空">🗑</button>
+              </div>
+              <div class="scene-desc-right">
+                <button type="button" class="scene-desc-tool" id="csDescSearch" title="搜索参考">🔍 搜索参考</button>
+                <button type="button" class="scene-desc-tool" id="csDescPreset" title="预设">☰ 预设</button>
+                <button type="button" class="scene-desc-tool" id="csDescMagic" title="智能优化">✨</button>
+                <button type="button" class="scene-desc-tool" id="csDescVoice" title="语音输入">🎙</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：模型配置面板（与素材工作台共享结构） -->
+        <div class="ms-right-panel" id="csRightPanel">
+          <div class="ms-rp-title" id="csRpTitle">人物形象生成 · 角色先建策略</div>
+          <!-- 供应商选择行 -->
+          <div class="rp-provider-row" id="csProvRow"></div>
+          <!-- 供应商描述 -->
+          <div class="rp-prov-desc" id="csProvDesc"></div>
+          <!-- 模型版本选择器 -->
+          <div class="rp-model-row" id="csModelRow">
+            <div class="rp-model-label">模型版本</div>
+            <div class="rp-model-opts" id="csModelOpts"></div>
+          </div>
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">画幅比</div>
+            <div class="ms-rp-options" id="csRatioOpts">
+              <span class="ms-rp-opt">21:9</span><span class="ms-rp-opt active">16:9</span><span class="ms-rp-opt">4:3</span><span class="ms-rp-opt">1:1</span>
+            </div>
+          </div>
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">分辨率</div>
+            <div class="ms-rp-options" id="csResOpts">
+              <span class="ms-rp-opt active">720p</span><span class="ms-rp-opt">1080p</span><span class="ms-rp-opt">2K</span>
+            </div>
+          </div>
+          <div class="ms-rp-section">
+            <div class="ms-rp-label">生成数量</div>
+            <div class="ms-rp-options" id="csCountOpts">
+              <span class="ms-rp-opt active">1张</span><span class="ms-rp-opt">2</span><span class="ms-rp-opt">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部工具栏 -->
+      <div class="ms-toolbar">
+        <div class="ms-toolbar-left">
+          <span class="ms-tb-hint">|</span>
+          <label class="ms-tb-label">预设模板</label>
+        </div>
+        <div class="ms-toolbar-center">
+          <span class="ms-summary-tag" id="csSummaryTag">Seedream 2.0 · 16:9 · 720p · 1张</span>
+        </div>
+        <div class="ms-toolbar-right">
+          <button type="button" class="ms-tb-tool" id="csTbPreset" title="预设">📋</button>
+          <button type="button" class="ms-generate-btn" id="csGenerateBtn">
+            <span class="ms-gen-icon">✨</span> 生成
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script src="js/providers.js"></script>
+  <script src="js/studio.js"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>控制台 · ReelForge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="theme-dark" data-page="dashboard">
+  <header class="site-header"></header>
+
+  <div class="app-shell">
+    <aside class="sidebar"></aside>
+
+    <main class="app-main">
+      <!-- ===== 项目视图（默认） ===== -->
+      <div id="dashViewProjects">
+      <div class="app-head">
+        <div>
+          <div class="crumbs">ReelForge 控制台</div>
+          <div class="page-title">视频项目</div>
+          <div id="memberState" class="muted" style="font-size:13px;margin-top:4px"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="dash-search">
+            <span class="dash-search-icon">🔍</span>
+            <input type="text" id="projSearchInput" class="dash-search-input" placeholder="搜索项目名称…" />
+          </div>
+          <button class="btn btn-ghost btn-sm" id="batchProjectsBtn">批量管理</button>
+          <button class="btn btn-primary" id="newBtn">+ 新建项目</button>
+        </div>
+      </div>
+
+      <div class="grid grid-4" id="statCards" style="margin-bottom:24px">
+        <div class="stat"><div class="v" id="stTotal">0</div><div class="l">项目总数</div></div>
+        <div class="stat"><div class="v" id="stRendering">0</div><div class="l">渲染中</div></div>
+        <div class="stat"><div class="v" id="stDone">0</div><div class="l">已完成</div></div>
+        <div class="stat"><div class="v" id="stDraft">0</div><div class="l">草稿</div></div>
+      </div>
+
+      <div class="project-grid" id="projectGrid"></div>
+      <div class="batch-bar" id="batchProjectsBar" style="display:none">
+        <span class="batch-info">已选 <b id="batchProjCount">0</b> 项</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" id="batchProjSelAllBtn">全选</button>
+          <button class="btn btn-ghost btn-sm" id="batchProjCancelBtn">取消</button>
+          <button class="btn btn-danger btn-sm" id="batchProjDelBtn">删除选中</button>
+        </div>
+      </div>
+      </div>
+
+      <!-- ===== 模板项目视图 ===== -->
+      <div id="dashViewTemplates" style="display:none">
+      <div class="app-head">
+        <div>
+          <div class="crumbs">ReelForge 控制台</div>
+          <div class="page-title">模板项目</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">从预设模板开始制作，只需上传自己的素材即可一键生成视频</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="dash-search">
+            <span class="dash-search-icon">🔍</span>
+            <input type="text" id="tmplSearchInput" class="dash-search-input" placeholder="搜索项目名称…" />
+          </div>
+          <button class="btn btn-ghost btn-sm" id="batchTemplatesBtn">批量管理</button>
+          <button class="btn btn-accent" id="goTemplatesBtn">从模板快速开始</button>
+        </div>
+      </div>
+      <div class="project-grid" id="templateGrid"></div>
+      <div class="batch-bar" id="batchTemplatesBar" style="display:none">
+        <span class="batch-info">已选 <b id="batchTmplCount">0</b> 项</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" id="batchTmplSelAllBtn">全选</button>
+          <button class="btn btn-ghost btn-sm" id="batchTmplCancelBtn">取消</button>
+          <button class="btn btn-danger btn-sm" id="batchTmplDelBtn">删除选中</button>
+        </div>
+      </div>
+      </div>
+      <div id="dashViewAssets" style="display:none">
+      <div class="app-head">
+        <div>
+          <div class="crumbs">ReelForge 控制台</div>
+          <div class="page-title">我的资产</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">管理你生成的所有图片、视频与音频素材</div>
+        </div>
+      </div>
+
+      <!-- 资产搜索栏 -->
+      <div class="assets-bar" id="assetsBar">
+        <div class="assets-search-wrap">
+          <span class="assets-search-icon">🔍</span>
+          <input type="text" class="assets-search" id="assetSearchInput" placeholder="搜索资产名称..." />
+        </div>
+        <button class="btn btn-primary btn-sm" id="assetQueryBtn"><span>🔍</span> 查询</button>
+        <button class="btn btn-ghost btn-sm" id="assetUploadBtn"><span>⬆</span> 上传</button>
+      </div>
+
+      <!-- 资产分类标签 -->
+      <div class="assets-tabs" id="assetsTabs">
+        <button type="button" class="asset-tab active" data-atype="all">全部</button>
+        <button type="button" class="asset-tab" data-atype="image">图片</button>
+        <button type="button" class="asset-tab" data-atype="video">视频</button>
+        <button type="button" class="asset-tab" data-atype="audio">音频</button>
+      </div>
+
+      <!-- 提示条 -->
+      <div class="assets-hint" id="assetsHint">
+        <span class="assets-hint-bullet">●</span>
+        附件类（图片 / 音频 / 视频）仅保留 <b>30 天</b>，过期自动清除。
+      </div>
+
+      <!-- 资产网格 -->
+      <div class="assets-grid" id="assetsGrid">
+        <div class="assets-empty" id="assetsEmpty">
+          <span class="assets-empty-icon">📁</span>
+          <p>暂无资产</p>
+          <p class="muted" style="font-size:12px">生成的素材会自动出现在这里，或点击右上角「上传」手动添加</p>
+        </div>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <h3 id="modalTitle">新建项目</h3>
+      <form id="projectForm">
+        <input type="hidden" id="projId" />
+        <div class="field">
+          <label>项目标题 *</label>
+          <input type="text" id="pTitle" required placeholder="如：夏季新品短视频" />
+        </div>
+        <div class="field">
+          <label>类型</label>
+          <select id="pType">
+            <option value="short_video">短视频</option>
+            <option value="ad">广告</option>
+            <option value="course">课程</option>
+            <option value="news">资讯</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>状态</label>
+          <select id="pStatus">
+            <option value="draft">草稿</option>
+            <option value="queued">排队中</option>
+            <option value="rendering">渲染中</option>
+            <option value="done">已完成</option>
+            <option value="failed">失败</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>创意 / 提示词</label>
+          <textarea id="pPrompt" placeholder="一句话描述这条视频要表达什么"></textarea>
+        </div>
+        <div class="field">
+          <label>备注</label>
+          <input type="text" id="pDesc" placeholder="选填" />
+        </div>
+        <div class="field">
+          <label>模型供应商（meta.vendor）</label>
+          <input type="text" id="pVendor" placeholder="如：open / vendor-a" />
+        </div>
+        <div class="field">
+          <label>时长（秒，meta.duration）</label>
+          <input type="number" id="pDuration" placeholder="如：15" />
+        </div>
+        <p class="form-error" id="pErr"></p>
+        <div class="modal-actions" style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" id="cancelBtn">取消</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer"></footer>
+  <script src="js/site.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
